@@ -17,7 +17,7 @@ class CreateInventoryNotification extends Migration
             $table->id();
             $table->enum('type',['out_of_stock','expire_soon','expired']);
             $table->foreignId('inventory_item_id')->constrained('inventory_items');
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

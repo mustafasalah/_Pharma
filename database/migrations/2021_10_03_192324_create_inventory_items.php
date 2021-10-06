@@ -22,7 +22,7 @@ class CreateInventoryItems extends Migration
             $table->unsignedInteger('stock');
             $table->unsignedInteger('reserved')->default(0);
             $table->timestamp('arrival_date')->useCurrent();
-            $table->timestamp('expire_date')->nullable();
+            $table->timestamp('expire_date')->useCurrent();
             // $table->timestamps();
         });
     }

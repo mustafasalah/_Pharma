@@ -17,7 +17,7 @@ class CreatePharmacyNotifications extends Migration
             $table->id();
             $table->enum('type',['new_pharmacy','new_branch']);
             $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
-            //$table->timestamps();
+            $table->timestamps();
         });
     }
 

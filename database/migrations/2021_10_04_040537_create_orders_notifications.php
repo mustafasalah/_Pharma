@@ -16,7 +16,7 @@ class CreateOrdersNotifications extends Migration
         Schema::create('orders_notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders');
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 
