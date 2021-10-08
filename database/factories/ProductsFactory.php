@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Categories;
+use App\Models\Company;
 use App\Models\Products;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,7 +28,7 @@ class ProductsFactory extends Factory
             'barcode'=>$this->faker->ean13(),
             'unit'=>$this->faker->name(),
             'category'=>Categories::factory()->create(),
-            'company'=>$this->faker->text(),
+            'company'=>Company::factory()->create(),
             'ingredient'=>$this->faker->text(),
             'need_prescreption'=>$this->faker->boolean(20),
             'description'=>$this->faker->paragraph(),

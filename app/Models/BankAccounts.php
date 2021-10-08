@@ -9,4 +9,9 @@ class BankAccounts extends Model
 {
     use HasFactory;
     public $timestamps=false;
+
+    public function pharmacyBranch()
+    {
+        return $this->belongsTo(PharmacyBranches::class,'id','bank_account');
+    }
 }

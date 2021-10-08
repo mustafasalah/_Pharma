@@ -18,8 +18,8 @@ class CreateProducts extends Migration
             $table->string('name');
             $table->string('barcode')->nullable();
             $table->string('unit');
-            $table->foreignId('category')->constrained('categories');
-            $table->string('company')->nullable();
+            $table->foreignId('category')->constrained('categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('company')->constrained('companies')->onUpdate('cascade');
             $table->string('ingredient')->nullable();
             $table->boolean('need_prescreption')->default(false);
             $table->text('description')->nullable();

@@ -1,13 +1,10 @@
 <?php
-/**
- * created by OX
- */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePharmaciesTable extends Migration
+class CreateCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,11 +13,9 @@ class CreatePharmaciesTable extends Migration
      */
     public function up()
     {
-        //creating the Pharmacies table
-        Schema::create('pharmacies', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->foreignId("owner")->constrained("users")->onDelete('cascade')->onUpdate('cascade');//id of the owner when the user is deleted the pharamacy is deleted
+            $table->string('name');
             // $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ class CreatePharmaciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pharmacies');
+        Schema::dropIfExists('companies');
     }
 }

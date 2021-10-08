@@ -9,4 +9,16 @@ class Pharmacies extends Model
 {
     use HasFactory;
     public $timestamps=false;
+
+    /**Relations */
+
+    public function pharmacyBranches()
+    {
+        return $this->hasMany(PharmacyBranches::class,'pharmacy_id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class,'owner');
+    }
 }

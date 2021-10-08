@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->string('username',20);
             $table->string('password');
             $table->enum('role',['pharmacist','branch_manager']);
-            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
+            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
             $table->string('phone_number',14)->nullable();
             $table->enum('gender',['m','f']);
             $table->time('work_from')->nullable();

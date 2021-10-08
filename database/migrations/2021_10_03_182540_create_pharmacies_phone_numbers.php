@@ -16,7 +16,7 @@ class CreatePharmaciesPhoneNumbers extends Migration
         Schema::create('pharmacies_phone_numbers', function (Blueprint $table) {
             $table->id();
             $table->string('phone_number',14);
-            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
+            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
             // $table->timestamps();
         });
     }

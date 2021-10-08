@@ -2,18 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Orders;
-use App\Models\OrdersNotifications;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class OrdersNotificationsFactory extends Factory
+class CompanyFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = OrdersNotifications::class;
+    protected $model = Company::class;
 
     /**
      * Define the model's default state.
@@ -23,8 +22,7 @@ class OrdersNotificationsFactory extends Factory
     public function definition()
     {
         return [
-            'type'=>'order',
-            'order_id'=>Orders::factory()->create()
+            'name'=>$this->faker->name()
         ];
     }
 }

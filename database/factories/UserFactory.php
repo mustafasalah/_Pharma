@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'gender'=>$this->faker->randomElement(['m','f']),
             'email' => $this->faker->unique()->safeEmail(),
             'phone_number' =>$this->faker->numerify('+249##########'),
-            'address'=> Addresses::factory(),
+            'address_id'=> Addresses::factory(),
             'role'=>$this->faker->randomElement(['admin','pharmacy_owner','user']),
             'status'=>$this->faker->randomElement(['activated','non-activated','banned']),
             'last_seen'=>$this->faker->dateTime($max='now'),

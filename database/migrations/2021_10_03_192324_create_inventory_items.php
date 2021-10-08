@@ -15,8 +15,9 @@ class CreateInventoryItems extends Migration
     {
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products');
-            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('supplier_id')->constrained('suppliers')->onUpdate('cascade');
+            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('price');
             $table->unsignedInteger('cost');
             $table->unsignedInteger('stock');

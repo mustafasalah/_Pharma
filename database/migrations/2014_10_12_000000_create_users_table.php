@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->enum('gender',['m','f']);
             $table->string('email')->unique();
             $table->string('phone_number',14);
-            $table->foreignId('address')->constrained('addresses');
+            $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
             $table->enum('role',['admin','pharmacy_owner','user'])->default('user');
             $table->enum('status',['activated','non-activated','banned']);
             $table->timestamp('last_seen')->useCurrent();

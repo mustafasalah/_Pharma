@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\InventoryItems;
+use App\Models\PharmacyBranches;
 use App\Models\Products;
 use App\Models\Suppliers;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,6 +27,7 @@ class InventoryItemsFactory extends Factory
         return [
             'product_id'=>Products::factory()->create(),
             'supplier_id'=>Suppliers::factory()->create(),
+            'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
             'price'=>$this->faker->numberBetween(0,2147412),
             'cost'=>$this->faker->numberBetween(0,374122),
             'stock'=>$this->faker->numberBetween(0,913442),

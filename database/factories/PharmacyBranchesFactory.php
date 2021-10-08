@@ -29,7 +29,7 @@ class PharmacyBranchesFactory extends Factory
             'pharmacy_id'=>Pharmacies::factory()->create(),
             // 'name'=>$this->faker->name(),
             'email'=>$this->faker->unique()->safeEmail(),
-            'address'=>Addresses::factory()->create(),
+            'address_id'=>Addresses::factory()->create(),
             'status'=>$this->faker->randomElement(["pending","active","rejected"]),
             'support_delivery'=>$this->faker->boolean(30),
             'atm_card'=>AtmCards::factory()->create(),

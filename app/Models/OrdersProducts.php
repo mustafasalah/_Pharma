@@ -9,4 +9,5 @@ class OrdersProducts extends Model
 {
     use HasFactory;
     public $timestamps=false;
+    /** Pivot Table */
 }

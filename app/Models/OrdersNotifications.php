@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrdersNotifications extends Model
 {
     use HasFactory;
+
+    /**Relations */
+
+    public function order()
+    {
+        return $this->belongsTo(Orders::class,'order_id');
+    }
 }

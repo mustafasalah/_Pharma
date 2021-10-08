@@ -16,7 +16,7 @@ class CreateInventoryNotification extends Migration
         Schema::create('inventory_notifications', function (Blueprint $table) {
             $table->id();
             $table->enum('type',['out_of_stock','expire_soon','expired']);
-            $table->foreignId('inventory_item_id')->constrained('inventory_items');
+            $table->foreignId('inventory_item_id')->constrained('inventory_items')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

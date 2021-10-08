@@ -23,9 +23,9 @@ class CreateOrders extends Migration
             $table->unsignedInteger('vat')->default(0);
             $table->foreignId('handeled_by')->constrained('employees');
             $table->timestamp('created_at');
-            $table->foreignId('users_id')->constrained('users');
-            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
-            $table->foreignId('address_id')->constrained('addresses');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
             $table->unsignedInteger('delivery')->default(0);
             $table->string('payment_proof_screenshot');
             // $table->timestamps();
