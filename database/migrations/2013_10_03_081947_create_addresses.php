@@ -18,8 +18,8 @@ class CreateAddresses extends Migration
             $table->string('state');
             $table->string('city');
             $table->string('address');
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
             // $table->timestamps();
         });
     }

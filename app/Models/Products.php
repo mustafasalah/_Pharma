@@ -19,7 +19,7 @@ class Products extends Model
 
     public function category()
     {
-        return $this->belongsTo(Categories::class,'category');
+        return $this->belongsTo(Categories::class,'id');
     }
 
     public function inventoryItem()
@@ -29,7 +29,7 @@ class Products extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class,'company');
+        return $this->belongsTo(Company::class,'id');
     }
 
 
