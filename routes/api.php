@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
 use Illuminate\Http\Request;
@@ -21,16 +22,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('Products/search/{data}', [InventoryItemsController::class,'search']);
 Route::resource('Addresses',AddressesController::class);
 Route::resource('Products', InventoryItemsController::class);
-// Route::get('Products/{Product}/Pharmacy/{Pharmacy}', [InventoryItemsController::class,'show']);
 Route::resource('Pharmacies', PharmacyBranchesController::class);
+
+/** Register and login routes */
+Route::post('/register',[AuthController::class,'register']);
+Route::post('/login', [AuthController::class,'login']);
+/** end of Reg and Log */
 
 
 //Private Routes
 Route::group(['middleware' => ['auth:sanctum'] ],function () {
-    // Route::get('/user', [AddressesController::class,'']);
+    /** Logout route */
+    Route::post('/logout', [AuthController::class,'logout']);
 
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
