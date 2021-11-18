@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    /**
+     * @author @OxSama
+     * Register new users and send access tokens to them
+     * @param Illuminate\Http\Request
+     * @return response containing App\Models\User , Token
+     */
     public function register(Request $request)
     {
         $fields= $request->validate(
@@ -43,6 +50,12 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * @author @OxSama
+     * Login users and send access tokens to them
+     * @param Illuminate\Http\Request
+     * @return response containing App\Models\User , Token
+     */
     public function login(Request $request)
     {
         $fields= $request->validate(
@@ -69,12 +82,21 @@ class AuthController extends Controller
         return response($response,201);
     }
 
+    /**
+     * @author @OxSama
+     * Logout users delete access tokens
+     * @param Illuminate\Http\Request
+     * @return response 'message' : 'Logged Out'
+     */
     public function logout(Request $request)
     {
+        /**
+         * Might find error but its working
+         */
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'logged out'
+            'message' => 'Logged Out'
         ];
     }
 }

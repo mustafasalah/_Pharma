@@ -5,13 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\PharmaciesPhoneNumbers;
 use App\Models\PharmacyBranches;
 use Illuminate\Http\Request;
-
+/**This class takes the requests from the Pharma Mobile to via route /api/Pharmacies
+ * It returns Pharmacies to be viewed
+ * created By @OxSama
+ */
 class PharmacyBranchesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @author @OxSama
      * @return \Illuminate\Http\Response
+     * the response is Json  {
+     * 'branch_id' : $id
+     * 'name' : $name,
+     * 'state' : $state,
+     * 'phone' : $phone,
+     * 'email' : $email,
+     * 'website' : $website,
+     * 'lat' => $lat,
+     * 'long' : $long
+     * }
      */
     public function index()
     {
@@ -32,6 +45,7 @@ class PharmacyBranchesController extends Controller
             }
         );
         $response=collect();
+
         foreach($pharmacyBranches as $pharmacyBranch)
         {
             $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
@@ -45,34 +59,16 @@ class PharmacyBranchesController extends Controller
             $data=[
                 'branch_id' => $pharmacyBranch->id,
                 'name' => $name,
-                'state' => $pharmacyBranch->address->state,
+                'state' => $pharmacyBranch->address ? $pharmacyBranch->address->state : '',
                 'phone' => $phone,
-                "email" => $pharmacyBranch->email,
-                "website" => $pharmacyBranch->website,
-                "lat" => $pharmacyBranch->address->latitude,
-                "long" => $pharmacyBranch->address->longitude
+                "email" => $pharmacyBranch ? $pharmacyBranch->email : '',
+                "website" => $pharmacyBranch ?  $pharmacyBranch->website : '',
+                "lat" => $pharmacyBranch->address ? $pharmacyBranch->address->latitude : '',
+                "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : ''
             ];
             $response->push($data);
         }
         return $response;
-        /**return response()->json([
-            'name' => $name,
-            'state' => $state,
-            'phone' => $phone,
-            "email" => $email,
-            "website" => $website,
-            "lat" => $lat,
-            "long" => $long
-        ]); */
-        // {
-        //     "name":"CVS Pharmacy",
-        //     "state":"khartoum State,Khartoum,Khartoum 2",
-        //     "phone":"+249912000023 - +249112000023",
-        //     "email":"cvspharmacysupport@cvs-pharma.com",
-        //     "website":"www.cvs-Pharma.com",
-        //     "lat":15.569893951439786,
-        //     "long":32.53183948952209
-        // }
     }
 
     /**
@@ -88,9 +84,19 @@ class PharmacyBranchesController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * @author @OxSama
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * the response is Json  {
+     * 'branch_id' : $id
+     * 'name' : $name,
+     * 'state' : $state,
+     * 'phone' : $phone,
+     * 'email' : $email,
+     * 'website' : $website,
+     * 'lat' => $lat,
+     * 'long' : $long
+     * }
      */
     public function show($id)
     {
@@ -136,8 +142,9 @@ class PharmacyBranchesController extends Controller
         }
         return $response->first();
     }
+
     /** Format the phone numbers
-     *
+     *  @author @OxSama
      *  @param  $phone array[] of phone numbers
      *  @return string phone numbers "+249##########    -   +249##########  -....."
      */

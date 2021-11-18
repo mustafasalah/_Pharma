@@ -5,62 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Company;
 use App\Models\InventoryItems;
+use App\Models\Pharmacies;
+use App\Models\PharmacyBranches;
 use App\Models\Products;
 use Illuminate\Http\Request;
+
 
 class InventoryItemsController extends Controller
 {
     /**
+     * @author @OxSama
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $Products=InventoryItems::all();
+        $Products = InventoryItems::all()->groupBy('product_id');
+        // return $Products[2];
         return InventoryItemsController::buildResponse($Products);
     }
-    /**
-     * @param Illuminate\Database\Eloquent\Collection $Products
-     * A Method that accepts a collection of inventory items and build a response with
-     * specific schema
-     * @return {
-     * "id": int,
-     * "Pharmacy_id": int,
-     * "name": String,
-     * "category": String,
-     * "price": int,
-     * "image": String,
-     * "des": String
-     * }
-     */
-    private static function buildResponse($Products){
-        $Products->every(
-            function($product){
-                return $product->product;
-            }
-        );
-        $response=collect();
-        foreach($Products as $product){
-            $category=Categories::where(
-                'id',$product->product->category
-            )->get(
-                'name'
-            )->first();
-            $category=$category->name;
-            $data=[
-                "id" => $product->id,
-                'Pharmacy_id' => $product->pharmacy_branch_id,
-                "name" => $product->product->name,
-                "category" => $category,
-                "price" => $product->price,
-                "image" => $product->product->photo,
-                "des" => $product->product->description
-            ];
-            $response->push($data);
-        }
-        return $response;
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -70,7 +35,7 @@ class InventoryItemsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //undone ///////////////////////////////////////////////////
     }
 
     /**
@@ -134,49 +99,144 @@ class InventoryItemsController extends Controller
         return InventoryItems::destroy($id);
     }
 
+    /**
+     * Search the Inventory items by product name and company name and active ingredient
+     * @author @OxSama
+     *
+     */
     public function search($data)
     {
+        $companies=Company::where(
+            'name','like','%'.$data.'%'
+        )->with('inventoryItems')->get();
+        // return $companies;
+
+        /** loop to push inventory items from companies */
+        $inventoryItemsFromCompanies=collect();
+        foreach($companies as $company){
+            if(!($company->inventoryItems->count() == 0)){
+                foreach($company->inventoryItems as $singleItem){
+                    unset($singleItem->laravel_through_key);//remove Laravel through key
+                    // return $singleItem;
+                    // return collect($singleItem);
+                    // return gettype($singleItem);
+                    $inventoryItemsFromCompanies->push($singleItem);
+                }
+            }
+        }
+        // return $inventoryItemsFromCompanies;
+        /** end of loop */
+
         $Products=Products::where(
             'name', 'like', '%'.$data.'%'
         )->orWhere(
             'ingredient', 'like', '%'.$data.'%'
-        )->get();
-        $Products->every(
-            function($product){
-                return $product->inventoryItem;
-            }
-        );
-        $companies=Company::where(
-            'name','like','%'.$data.'%'
-        )->get();
-        $companies->every(
-            function($company){
-                return $company->products;
-            }
-        );
-        $inventoryItems=collect();
-        for ($i=0; $i < $Products->count() ; $i++){
-            $inventoryitem=$Products[$i]->inventoryItem;
-            if ($inventoryitem->count()>=0) {
-                for ($y=0; $y < $inventoryitem->count(); $y++) {
-                    $inventoryItems->push($inventoryitem[$y]);
+        )->with('inventoryItems')->get();
+        // return $Products;
+
+        $inventoryItemsFromProducts=collect();
+        foreach( $Products as $product ) {
+            if( !($product->inventoryItems->count() == 0 ) ){
+                foreach( $product->inventoryItems as $singleItem ){
+                    $inventoryItemsFromProducts->push($singleItem);
                 }
             }
         }
-        foreach($companies as $company){
-            for($i=0; $i < $company->products->count(); $i++){
-                $Products=$company->products;
-                for ($i=0; $i < $Products->count() ; $i++){
-                    $inventoryitem=$Products[$i]->inventoryItem;
-                    if ($inventoryitem->count()>=0) {
-                        for ($y=0; $y < $inventoryitem->count(); $y++) {
-                            $inventoryItems->push($inventoryitem[$y]);
+
+
+        $inventoryItems=collect();
+        $inventoryItems=$inventoryItems->concat($inventoryItemsFromProducts);
+        $inventoryItems = $inventoryItems->concat($inventoryItemsFromCompanies);
+        $inventoryItems = $inventoryItems->groupBy('product_id');
+        // return $inventoryItems[2]->unique();
+        $inventoryItems = InventoryItemsController::uniqueJson($inventoryItems);
+        // return $inventoryItems;
+        return InventoryItemsController::buildResponse($inventoryItems);
+    }
+
+
+    /**
+     * @author @OxSama
+     * @param Illuminate\Database\Eloquent\Collection $inventoryItems
+     * A Method that accepts a collection of inventory items grouped by its product ids and remove duplicated objects
+     * @return Illuminate\Database\Eloquent\Collection $inventoryItems
+     */
+    public static function uniqueJson($inventoryItems)
+    {
+        $keys = $inventoryItems->keys();
+        foreach ($keys as $key){
+            $insideKeys = $inventoryItems[$key]->keys();
+            foreach($insideKeys as $insideKey){
+                for($i=$insideKey+1; $i < $insideKeys->count(); $i++) {
+                    if(isset($inventoryItems[$key][$i])){
+                        if($inventoryItems[$key][$insideKey]->id == $inventoryItems[$key][$i]->id){
+                            unset($inventoryItems[$key][$i]);
                         }
                     }
                 }
             }
         }
-        $inventoryItems->unique();
-        return InventoryItemsController::buildResponse($inventoryItems);
+        return $inventoryItems;
+    }
+
+
+    /**
+     * @author @OxSama
+     * @param Illuminate\Database\Eloquent\Collection $Products
+     * A Method that accepts a collection of inventory items grouped by its product ids and build a response with
+     * specific schema
+     * @return {
+     * "ids": collection int,
+     * "Product_id" : int,
+     * "Pharmacy_Branches_ids": collection int,
+     * "name": String,
+     * "category": String,
+     * "prices": int,
+     * "image": String,
+     * "des": String
+     * }
+     */
+    private static function buildResponse($Products){
+        $response=collect();
+        foreach($Products as $product){
+            $product->first(function($product){
+                return $product->product;
+            });
+            // return $product;
+            $category=Categories::where(
+                    'id' , $product->first()->product->category
+                    )->get(
+                        'name'
+                    )->first();
+            $category=$category->name;
+
+            $pharmacyBranchesIds = collect();
+            $pharmacyBranchesNames = collect();
+            $ids = collect();
+            $prices = collect();
+            foreach($product as $specificProduct){
+                $pharmacyBranchesIds->push($specificProduct->pharmacy_branch_id);
+                $BranchNameAndId = PharmacyBranches::where('id', $specificProduct->pharmacy_branch_id)->get(['name','pharmacy_id'])->first();
+                $pharmacyName = Pharmacies::where('id',$BranchNameAndId->pharmacy_id)->get('name')->first();
+                $pharmacyBranchesNames->push($branchName = $pharmacyName->name . '  -   ' .$BranchNameAndId->name);
+                $ids->push($specificProduct->id);
+                $prices->push($specificProduct->price);
+            }
+            //the price right now is the price for the first pharmacy branch
+            $data=[
+                "ids" => $ids,
+                "Product_id" => $product->first()->product->id,
+                'Pharmacy_Branches_ids' => $pharmacyBranchesIds,
+                'branch_name' => $pharmacyBranchesNames,
+                "name" => $product->first()->product->name,
+                "category" => $category,
+                "prices" => $prices,//the price should change
+                "image" => $product->first()->product->photo,
+                "des" => $product->first()->product->description
+            ];
+            $response->push($data);
+            // return $response;
+        }
+        return $response;
     }
 }
