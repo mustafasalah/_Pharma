@@ -118,8 +118,6 @@ class InventoryItemsController extends Controller
                 foreach($company->inventoryItems as $singleItem){
                     unset($singleItem->laravel_through_key);//remove Laravel through key
                     // return $singleItem;
-                    // return collect($singleItem);
-                    // return gettype($singleItem);
                     $inventoryItemsFromCompanies->push($singleItem);
                 }
             }
