@@ -22,9 +22,10 @@ class EmployeesFactory extends Factory
      */
     public function definition()
     {
+        // $username = $this->faker->userName() . random_int(0,1000);
         return [
             'fullname'=>$this->faker->name(),
-            'username'=>$this->faker->userName(),
+            'username'=>$this->faker->unique()->userName,
             'password'=>$this->faker->password(),
             'role'=>$this->faker->randomElement(['pharmacist','branch_manager']),
             'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
