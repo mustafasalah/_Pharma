@@ -36,8 +36,8 @@ class UserFactory extends Factory
             'address_id'=> Addresses::factory(),
             'role'=>$this->faker->randomElement(['admin','pharmacy_owner','user']),
             'status'=>$this->faker->randomElement(['activated','non-activated','banned']),
-            'last_seen'=>$this->faker->dateTime($max='now'),
-            'create_time'=>$this->faker->dateTime($max='now')
+            'last_seen'=>$this->faker->dateTimeThisYear(),
+            'create_time'=>$this->faker->dateTimeThisYear()
             // 'email_verified_at' => now(),
             // // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             // 'remember_token' => Str::random(10),

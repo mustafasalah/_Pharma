@@ -34,7 +34,7 @@ class PharmacyBranchesFactory extends Factory
             'support_delivery'=>$this->faker->boolean(30),
             'atm_card'=>AtmCards::factory()->create(),
             'bank_account'=>BankAccounts::factory()->create(),
-            'created_at'=>$this->faker->dateTime('now')
+            'created_at'=>$this->faker->dateTimeThisYear()
         ];
     }
 }
