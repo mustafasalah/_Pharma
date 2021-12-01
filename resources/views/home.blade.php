@@ -3,7 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <link rel="icon" href="/assets/images/favicon.svg" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Pharma Platform is online pharmacy management system that link all local pharmacies together under one system and enable online ordering for medicines." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
