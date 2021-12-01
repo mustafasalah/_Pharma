@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\AdminStatisticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
@@ -30,10 +31,26 @@ Route::post('/login', [AuthController::class,'login']);
 /** end of Reg and Log */
 
 
+/** Testing Area */
+##########################
+/** End of Testing Area */
+
 //Private Routes
 Route::group(['middleware' => ['auth:sanctum'] ],function () {
     /** Logout route */
     Route::post('/logout', [AuthController::class,'logout']);
+
+    // admin statistics
+        //1_122 photo
+    Route::get('/admin/viewsData',[AdminStatisticsController::class,'views']);
+        //2_122 photo
+    Route::get('/admin/salesData',[AdminStatisticsController::class,'sales']);
+        //3_122 photo
+    Route::get('/admin/getOnlineOrdersStatistics/{time}',[AdminStatisticsController::class,'getOnlineOrdersStatistics']);
+        //4_122 photo
+    Route::get('/admin/getViewsStatistics/{time}',[AdminStatisticsController::class,'getViewsStatistics']);
+        //5_122 photo
+    Route::get('/admin/getOrdersLineStatistics/{time}',[AdminStatisticsController::class,'getOrdersLineStatistics']);
 
 });
 
