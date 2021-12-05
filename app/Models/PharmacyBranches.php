@@ -17,14 +17,14 @@ class PharmacyBranches extends Model
         return $this->hasOne(PharmacyBranches::class,'phamracy_branch_id');
     }
 
-    public function atmCards()
+    public function atmCard()
     {
-        return $this->hasMany(AtmCards::class,'id');
+        return $this->hasOne(AtmCards::class,'id');
     }
 
     public function bankAccount()
     {
-        return $this->hasMany(BankAccounts::class,'id');
+        return $this->hasOne(BankAccounts::class,'id');
     }
 
     public function employees()

@@ -51,7 +51,7 @@ class User extends Authenticatable
     /** Relations */
     public function address()
     {
-        return $this->hasOne(Addresses::class,'address_id');
+        return $this->hasOne(Addresses::class,'id'); //modified address_id to id
     }
     public function orders()
     {
@@ -60,6 +60,10 @@ class User extends Authenticatable
     public function pharmacy()
     {
         return $this->hasOne(Pharmacies::class,'address_id');
+    }
+
+    public function fullName() {
+        return $this->first_name . " " . $this->last_name;
     }
 
 }
