@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminStatisticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
+use App\Http\Controllers\OrdersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,8 @@ Route::get('Products/search/{data}', [InventoryItemsController::class,'search'])
 Route::resource('Addresses',AddressesController::class);
 Route::resource('Products', InventoryItemsController::class);
 Route::resource('Pharmacies', PharmacyBranchesController::class);
+Route::resource('Orders', OrdersController::class);
+Route::get('allOrders', [OrdersController::class,'allOrders']);
 
 /** Register and login routes */
 Route::post('/register',[AuthController::class,'register']);
