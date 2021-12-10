@@ -12,21 +12,25 @@ class Products extends Model
 
     /** Relations */
 
+    // In the pivot table the products belongs to many orders
     public function orders()
     {
         return $this->belongsToMany(Orders::class,'orders_products')->withPivot("quantity", "price", "cost");
     }
-//modified by saeed
+
+    // Product belongs to one category
     public function categories()
     {
         return $this->belongsTo(Categories::class,'id');
     }
 
-    public function inventoryItem()
+    // Product has many inventory items
+    public function inventoryItems()
     {
         return $this->hasMany(InventoryItems::class,'product_id');
     }
-//modified by saeed
+
+    // Product belongs to one company
     public function companies()
     {
         return $this->belongsTo(Company::class,'id');

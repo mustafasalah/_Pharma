@@ -12,8 +12,15 @@ class Company extends Model
     public $timestamps =false;
 
     /**Relations */
+
+    // Company has many products
     public function products()
     {
         return $this->hasMany(Products::class,'company');
+    }
+
+    // Company has many Inventory Items through the products table
+    public function inventoryItems(){
+        return $this->hasManyThrough(InventoryItems::class,Products::class,'company','product_id');
     }
 }

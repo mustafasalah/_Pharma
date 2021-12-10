@@ -12,9 +12,10 @@ class PharmacyBranches extends Model
 
     /**Relations */
 
+    //
     public function pharmacyNotification()
     {
-        return $this->hasOne(PharmacyBranches::class,'phamracy_branch_id');
+        return $this->hasOne(PharmacyBranches::class,'pharmacy_branch_id');
     }
 
     public function atmCard()

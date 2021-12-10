@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\AdminStatisticsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CompanyController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PharmacyBranchInfoController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
+use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 //Public route
 Route::get('Products/search/{data}', [InventoryItemsController::class,'search']);
 Route::resource('Addresses',AddressesController::class);
@@ -41,10 +44,26 @@ Route::post('/login', [AuthController::class,'login']);
 /** end of Reg and Log */
 
 
+/** Testing Area */
+##########################
+/** End of Testing Area */
+
 //Private Routes
 Route::group(['middleware' => ['auth:sanctum'] ],function () {
     /** Logout route */
     Route::post('/logout', [AuthController::class,'logout']);
+
+    // admin statistics
+        //1_122 photo
+    Route::get('/admin/viewsData',[AdminStatisticsController::class,'views']);
+        //2_122 photo
+    Route::get('/admin/salesData',[AdminStatisticsController::class,'sales']);
+        //3_122 photo
+    Route::get('/admin/getOnlineOrdersStatistics/{time}',[AdminStatisticsController::class,'getOnlineOrdersStatistics']);
+        //4_122 photo
+    Route::get('/admin/getViewsStatistics/{time}',[AdminStatisticsController::class,'getViewsStatistics']);
+        //5_122 photo
+    Route::get('/admin/getOrdersLineStatistics/{time}',[AdminStatisticsController::class,'getOrdersLineStatistics']);
 
 });
 
@@ -65,6 +84,7 @@ Route::resource('inventory', InventoryProductController::class);
 Route::resource('notifications', NotificationsController::class);
 Route::resource('suppliers', SuppliersController::class);
 Route::resource('orders', OrdersController::class);
+Route::post("drugs/upload", [ProductsController::class, "uploadPhoto"]);
 Route::resource('drugs', ProductsController::class);
 Route::get("pharmacies/{type}/{id}", [PharmacyBranchesController::class, "show"]);
 Route::resource('pharmacies', PharmaciesController::class);
