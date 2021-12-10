@@ -15,11 +15,11 @@ class Products extends Model
     // In the pivot table the products belongs to many orders
     public function orders()
     {
-        return $this->belongsToMany(Orders::class,'orders_products','product_id','order_id');
+        return $this->belongsToMany(Orders::class,'orders_products')->withPivot("quantity", "price", "cost");
     }
 
     // Product belongs to one category
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Categories::class,'id');
     }
@@ -31,7 +31,7 @@ class Products extends Model
     }
 
     // Product belongs to one company
-    public function company()
+    public function companies()
     {
         return $this->belongsTo(Company::class,'id');
     }
