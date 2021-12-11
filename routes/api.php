@@ -90,7 +90,10 @@ Route::resource('suppliers', SuppliersController::class);
 Route::resource('orders', OrdersController::class);
 Route::post("drugs/upload", [ProductsController::class, "uploadPhoto"]);
 Route::resource('drugs', ProductsController::class);
-Route::get("pharmacies/{type}/{id}", [PharmacyBranchesController::class, "show"]);
+Route::delete('employees/{employee}',[EmployeesController::class,'destroy']);
 Route::resource('pharmacies', PharmaciesController::class);
 //OrdersNotifications table controller route
 Route::get('ordersNotifications', [OrdersNotificationsController::class,'index']);
+//pharmacy branch info controller
+Route::get("pharmacyBranchInfo/{type}/{id}", [PharmacyBranchInfoController::class, 'moreInfo']);
+Route::get('pharmacyBranchInfo', [PharmacyBranchInfoController::class,'index']);

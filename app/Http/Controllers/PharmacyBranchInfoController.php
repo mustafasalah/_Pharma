@@ -16,15 +16,15 @@ class PharmacyBranchInfoController extends Controller
      */
     public function index()
     {
-        
+
         $pharmacyBranches = PharmacyBranches::all();
          //dd($pharmacyBranches[0]->bankAccount->account_no);
         // $pharmacyBranches = PharmacyBranches::with('bankAccount')->with('atmCard')->get();
-        
+
         $response=collect();
         foreach($pharmacyBranches as $pharmacyBranch)
         {
-   
+
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
             // $phone = PharmaciesPhoneNumbers::where(
@@ -38,7 +38,7 @@ class PharmacyBranchInfoController extends Controller
             $data=[
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
-                'branch' => $pharmacyBranch->name,               
+                'branch' => $pharmacyBranch->name,
                 'phone_numbers' => $phone,
                 "email" => $pharmacyBranch->email,
                 "website" => $pharmacyBranch->website,
@@ -49,7 +49,7 @@ class PharmacyBranchInfoController extends Controller
                 "delivery_cost" => "not set",
                 "created_at" => $pharmacyBranch->created_at,
                 "status" => $pharmacyBranch->status,
-                "payment_options" => 
+                "payment_options" =>
                 [
                     "mbok" =>
                     [
@@ -109,15 +109,7 @@ class PharmacyBranchInfoController extends Controller
         return $phoneNums;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -136,10 +128,19 @@ class PharmacyBranchInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($type, $id)
+    public function show()
     {
-        //
-        if ($type === "onwer") {
+        # code...
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function moreInfo($type, $id)
+    {
+        if ($type === "owner") {
             return $this->getOwnerPharmacies($id);
         } else {
             return $this->getEmployeePharmacy($id);
@@ -153,13 +154,13 @@ class PharmacyBranchInfoController extends Controller
 
         $response=collect();
 
-            
+
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
             $data=[
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
-                'branch' => $pharmacyBranch->name,               
+                'branch' => $pharmacyBranch->name,
                 'phone_numbers' => $phone,
                 "email" => $pharmacyBranch->email,
                 "website" => $pharmacyBranch->website,
@@ -173,15 +174,15 @@ class PharmacyBranchInfoController extends Controller
                 "owned_by" => ["id" => $pharmacyBranch->pharmacy->ownedBy->id ,"name" => $pharmacyBranch->pharmacy->ownedBy->fullName()]
             ];
             $response->push($data);
-        
+
         return $response;
     }
 
     private function getOwnerPharmacies($id) {
         $pharmacyBranch1=PharmacyBranches::all();
 
-        $pharmacy_id = DB::table('pharmacies')->where("owner", $id)->value("id");   
-        
+        $pharmacy_id = DB::table('pharmacies')->where("owner", $id)->value("id");
+
         $pharmacyBranch= PharmacyBranches::where("pharmacy_id", $pharmacy_id)->first();
 
         $response=collect();
@@ -192,13 +193,13 @@ class PharmacyBranchInfoController extends Controller
                 'first_name'
             )->first();
             $pharm=$pharm->first_name;*/
-            
+
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
             $data=[
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
-                'branch' => $pharmacyBranch->name,               
+                'branch' => $pharmacyBranch->name,
                 'phone_numbers' => $phone,
                 "email" => $pharmacyBranch->email,
                 "website" => $pharmacyBranch->website,
@@ -212,20 +213,10 @@ class PharmacyBranchInfoController extends Controller
                 "owned_by" => ["id" => $pharmacyBranch->pharmacy->ownedBy->id ,"name" => $pharmacyBranch->pharmacy->ownedBy->fullName()]
             ];
             $response->push($data);
-        
+
         return $response;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
