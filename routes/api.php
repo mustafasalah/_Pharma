@@ -8,7 +8,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
-use App\Http\Controllers\InventoryProductController;
+use App\Http\Controllers\OrdersNotificationsController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PharmaciesController;
@@ -33,12 +33,13 @@ use Illuminate\Support\Facades\Route;
 
 
 //Public route
-Route::get('Products/search/{data}', [InventoryItemsController::class,'search']);
-Route::resource('Addresses',AddressesController::class);
-Route::resource('Products', InventoryItemsController::class);
-Route::resource('Orders', OrdersController::class);
-Route::get('allOrders', [OrdersController::class,'allOrders']);
-Route::resource('Pharmacies', PharmacyBranchesController::class);
+//inventory items table routes
+//Search for an inventory item
+Route::get('inventoryItems/search/{data}', [InventoryItemsController::class,'search']);
+Route::get('inventoryItems/all', [InventoryItemsController::class,'all']);
+//phone Api
+Route::get('inventoryItems', [InventoryItemsController::class,'index']);
+//end of phone Api
 Route::resource('PharmaciesBranches', PharmacyBranchesController::class);//modified from */Pharmacies*
 
 /** Register and login routes */
