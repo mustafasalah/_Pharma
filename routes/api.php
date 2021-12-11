@@ -38,6 +38,17 @@ Route::get('inventoryItems/all', [InventoryItemsController::class,'all']);
 //phone Api
 Route::get('inventoryItems', [InventoryItemsController::class,'index']);
 //end of phone Api
+
+//Addresses Controller Route
+// Route::resource('Addresses',AddressesController::class);/** uncomment to activate the addresses controller */
+
+//orders controller Routes
+Route::get('orders', [OrdersController::class,'index']);
+//phone Api
+Route::get('orders/allOrdersExceptRejected',[OrdersController::class,'allOrdersExceptRejected']);
+Route::get('orders/allOrders', [OrdersController::class,'allOrders']);
+// end of phone Api
+
 //pharmacy Branches table controller
 Route::resource('PharmaciesBranches', PharmacyBranchesController::class);//modified from */Pharmacies*
 

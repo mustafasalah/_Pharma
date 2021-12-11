@@ -17,7 +17,7 @@ class OrdersController extends Controller
      * @author @OxSama
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function allOrdersExceptRejected()
     {
         $orders = Orders::where(
             'status',
@@ -104,7 +104,7 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      *     "productname": "Imodium-Instant-Melts",
-     *     "pharmacy" : "Castco pharmacies",
+     *     "pharmacy" : "Castro pharmacies",
      *     "QTY" : 2,
      *     "Unit Price":1200,
      *     "Total Amount" : 2400
@@ -183,18 +183,18 @@ class OrdersController extends Controller
                 "type" => $order->type,
                 "price" => $products,
                 "status" => $order->status,
-                "handled_by" => 
+                "handled_by" =>
                      [
                         "id" => $order->employee->id,
                         "name" => $order->employee->fullname
                      ],
                 "date" =>  $order->created_at,
-                "payment" => 
+                "payment" =>
                      [
                          "method" => $order->payment_method ,
                          "proof" => $order->payment_proof_screenshot
                      ],
-                "products" => 
+                "products" =>
                 $order->products->map(function($product) {
                     return [
                         "name" => $product->name,
