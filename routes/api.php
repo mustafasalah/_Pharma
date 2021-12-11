@@ -80,19 +80,22 @@ Route::group(['middleware' => ['auth:sanctum'] ],function () {
 //Public route *2*......
 //users table controller route
 Route::resource('users', UsersController::class);
-Route::resource('categories', CategoriesController::class);
-Route::resource('companies', CompanyController::class);
-Route::resource('employees', EmployeesController::class);
-Route::resource('inventory', InventoryProductController::class);
-Route::resource('notifications', NotificationsController::class);
-Route::resource('suppliers', SuppliersController::class);
-Route::resource('orders', OrdersController::class);
+
+//categories table controller route
+Route::get('categories', [CategoriesController::class,'index']);
+
+//companies table controller route
+Route::get('companies', [CompanyController::class,'index']);
+
 //employees table controller routes
 Route::get('employees', [EmployeesController::class,'index']);
 Route::delete('employees/{employee}',[EmployeesController::class,'destroy']);
-Route::resource('pharmacies', PharmaciesController::class);
+
 //OrdersNotifications table controller route
 Route::get('ordersNotifications', [OrdersNotificationsController::class,'index']);
+
+//suppliers table controller route
+Route::get('suppliers', [SuppliersController::class,'index']);
 
 //Products table Controller routes
 Route::post("products/upload", [ProductsController::class, 'uploadPhoto']);
