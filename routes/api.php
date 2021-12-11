@@ -15,7 +15,6 @@ use App\Http\Controllers\PharmacyBranchInfoController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UsersController;
-use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -88,12 +87,17 @@ Route::resource('inventory', InventoryProductController::class);
 Route::resource('notifications', NotificationsController::class);
 Route::resource('suppliers', SuppliersController::class);
 Route::resource('orders', OrdersController::class);
-Route::post("drugs/upload", [ProductsController::class, "uploadPhoto"]);
-Route::resource('drugs', ProductsController::class);
+//employees table controller routes
+Route::get('employees', [EmployeesController::class,'index']);
 Route::delete('employees/{employee}',[EmployeesController::class,'destroy']);
 Route::resource('pharmacies', PharmaciesController::class);
 //OrdersNotifications table controller route
 Route::get('ordersNotifications', [OrdersNotificationsController::class,'index']);
+
+//Products table Controller routes
+Route::post("products/upload", [ProductsController::class, 'uploadPhoto']);
+Route::get('products', [ProductsController::class,'index']);
+
 //pharmacies table controller route
 Route::get('pharmacies', [PharmaciesController::class,'index']);
 
