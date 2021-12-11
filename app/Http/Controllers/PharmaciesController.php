@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\PharmaciesPhoneNumbers;
 use App\Models\PharmacyBranches;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 
 class PharmaciesController extends Controller
 {
@@ -24,13 +23,13 @@ class PharmaciesController extends Controller
 
         $response=collect();
         foreach($pharmacyBranches as $pharmacyBranch)
-        {   
+        {
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
             $data=[
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
-                'branch' => $pharmacyBranch->name,               
+                'branch' => $pharmacyBranch->name,
                 'phone_numbers' => $phone,
                 "email" => $pharmacyBranch->email,
                 "website" => $pharmacyBranch->website,
@@ -65,7 +64,7 @@ class PharmaciesController extends Controller
         owned_by: {
             id: 1,
             name: "Mustafa Salah",
-        }   
+        }
     */
     /**
      * Show the form for creating a new resource.
@@ -93,7 +92,7 @@ class PharmaciesController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     * 
+     *
      *  api/pharmacies/onwer/:id
      *  api/pharmacies/employee/:id
      */

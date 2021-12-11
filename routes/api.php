@@ -94,6 +94,9 @@ Route::delete('employees/{employee}',[EmployeesController::class,'destroy']);
 Route::resource('pharmacies', PharmaciesController::class);
 //OrdersNotifications table controller route
 Route::get('ordersNotifications', [OrdersNotificationsController::class,'index']);
+//pharmacies table controller route
+Route::get('pharmacies', [PharmaciesController::class,'index']);
+
 //pharmacy branch info controller
 Route::get("pharmacyBranchInfo/{type}/{id}", [PharmacyBranchInfoController::class, 'moreInfo']);
 Route::get('pharmacyBranchInfo', [PharmacyBranchInfoController::class,'index']);
