@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\OrdersNotifications;
-use App\Models\PharmacyNotifications;
-use App\Models\InventoryNotifications;
-use App\Models\Orders;
-use App\Models\Employees;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Constraint\Count;
-use SebastianBergmann\LinesOfCode\Counter;
 
-class NotificationsController extends Controller
+class OrdersNotificationsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,13 +15,13 @@ class NotificationsController extends Controller
     {
         //
         $Orders_Notifications = OrdersNotifications::all();
-        $Orders = Orders::all();
-        $Pharmacy_Notifications = PharmacyNotifications::all();
-        $Inventory_Notifications = InventoryNotifications::all();
+        // $Orders = Orders::all();
+        // $Pharmacy_Notifications = PharmacyNotifications::all();
+        // $Inventory_Notifications = InventoryNotifications::all();
 
         $response = collect();
-        
-        
+
+
          /*   foreach($Pharmacy_Notifications as $pharmacy){
 
                 $data=[
@@ -38,9 +32,9 @@ class NotificationsController extends Controller
                 $response->push($data);
             }
             return $response; */
-        
 
-        
+
+
         $count = 1;
             foreach($Orders_Notifications as $Order){
                 /*$orderNotif1=OrdersNotifications::where('order_id',/*$Order->orderNotification->id)->get('order_id');
@@ -49,15 +43,15 @@ class NotificationsController extends Controller
                 $data=[
                     "id" => $Order->order_id,
                     "type" => $Order->type,
-                    "content" => $Order->type . " #" . $count++/*Count(array($Order->id+1))*/ . " From"  
+                    "content" => $Order->type . " #" . $count++/*Count(array($Order->id+1))*/ . " From"
                     /* $Orders->employee->fullname*/
-                    
+
                 ];
                 $response->push($data);
             }
             return $response;
-        
-        
+
+
     }
 
     /**

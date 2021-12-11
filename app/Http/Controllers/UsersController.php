@@ -60,7 +60,6 @@ class UsersController extends Controller
         joining_date: "24-10-2021",
     },*/
 
-    // Ro
 
     /**
      * Store a newly created resource in storage.

@@ -237,4 +237,43 @@ class InventoryItemsController extends Controller
         }
         return $response;
     }
+
+    public function all()
+    {
+         //
+         $Products=InventoryItems::all();
+
+         $response=collect();
+         foreach($Products as $product){
+             $category=Categories::where(
+                 'id',$product->product->category
+             )->get(
+                 'name'
+             )->first();
+             $category=$category->name;
+
+             $company=Company::where('id', $product->product->company)->get('name')->first();
+             $company=$company->name;
+
+             $data=[
+                 "id" => $product->id,
+                 "name" => $product->product->name,
+                 'barcode' => $product->product->barcode,
+                 "unit" => $product->product->unit,
+                 "category" => $category,
+                 "company" =>  $company,
+                 "photo" => $product->product->photo,
+                 "cost" => $product->cost,
+                 "price" => $product->price,
+                 "supplier" => $product->supplier->name,
+                 "stock" => $product->stock,
+                 "reserved" => $product->reserved,
+                 "arrival_date" => $product->arrival_date,
+                 "expire_date" => $product->expire_date,
+                 "online_order" => true // $product->online_order
+             ];
+             $response->push($data);
+         }
+         return $response;
+    }
 }
