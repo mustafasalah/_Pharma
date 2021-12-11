@@ -17,7 +17,7 @@ class UsersController extends Controller
     {
         //
        $Users = User::all();
-       
+
        $response = collect();
        //$state = request('state');
         foreach($Users as $user){
@@ -59,16 +59,6 @@ class UsersController extends Controller
         joining_date: "24-10-2021",
     },*/
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -81,7 +71,7 @@ class UsersController extends Controller
         //
         $response = collect();
         $data=[
-          
+
             'first_name' => $request->input('first_name'),
             "last_name" => $request->input('last_name'),
             "username" => $request->input('username'),
@@ -101,12 +91,12 @@ class UsersController extends Controller
          echo "record created";
         return $response;
     }
-        else 
-        echo "null!!!"; 
+        else
+        echo "null!!!";
         */
     }
-    
-    
+
+
 
     /**
      * Display the specified resource.
@@ -144,17 +134,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -181,7 +160,7 @@ class UsersController extends Controller
 
           else
           return response(['id'=>'$id',400]);
-          
+
     }
 }
 

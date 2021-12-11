@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:sanctum'] ],function () {
 
 
 //Public route *2*......
+//users table controller route
 Route::resource('users', UsersController::class);
 Route::resource('categories', CategoriesController::class);
 Route::resource('companies', CompanyController::class);
