@@ -9,7 +9,6 @@ use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
 use App\Http\Controllers\OrdersNotificationsController;
-use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PharmaciesController;
 use App\Http\Controllers\PharmacyBranchInfoController;
@@ -92,4 +91,5 @@ Route::post("drugs/upload", [ProductsController::class, "uploadPhoto"]);
 Route::resource('drugs', ProductsController::class);
 Route::get("pharmacies/{type}/{id}", [PharmacyBranchesController::class, "show"]);
 Route::resource('pharmacies', PharmaciesController::class);
-Route::resource('pharmacyBranchInfo', PharmacyBranchInfoController::class);
+//OrdersNotifications table controller route
+Route::get('ordersNotifications', [OrdersNotificationsController::class,'index']);
