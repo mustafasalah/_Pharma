@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Addresses;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -16,13 +17,13 @@ class UsersController extends Controller
     public function index()
     {
         //
-       $Users = User::all();
-       
-       $response = collect();
-       //$state = request('state');
-        foreach($Users as $user){
+        $Users = User::all();
 
-            $data=[
+        $response = collect();
+        //$state = request('state');
+        foreach ($Users as $user) {
+
+            $data = [
                 "id" => $user->id,
                 'first_name' => $user->first_name,
                 "last_name" => $user->last_name,
@@ -59,16 +60,7 @@ class UsersController extends Controller
         joining_date: "24-10-2021",
     },*/
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-
-    }
+    // Ro
 
     /**
      * Store a newly created resource in storage.
@@ -78,35 +70,59 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $response = collect();
-        $data=[
-          
+        // $request->validate([]);
+        if ($request->anyFilled(["state", "city", "address"])) {
+            $address = Addresses::where([
+                "state" => $request->input('state'),
+                "city" => $request->input('city'),
+                "address" => $request->input('address')
+            ])->first();
+
+            if ($address === null) {
+                $address = Addresses::create([
+                    "state" => $request->input('state'),
+                    "city" => $request->input('city'),
+                    "address" => $request->input('address')
+                ]);
+            }
+        }
+
+        $data = [
             'first_name' => $request->input('first_name'),
             "last_name" => $request->input('last_name'),
             "username" => $request->input('username'),
+            "password" => Hash::make($request->input('password')),
             "email" => $request->input('email'),
             "role" => $request->input('role'),
             "gender" => $request->input('gender'),
             "phone_number" => $request->input('phone_number'),
             "status" => $request->input('status'),
-            "state" => $request->input('state'),
-            "city" => $request->input('city'),
-            "address" => $request->input('address'),
-
+            "address_id" => $address->id,
         ];
-        User::create($data)->save();
-  /*      $response->push($data);
-        if($response){
-         echo "record created";
-        return $response;
+
+        if ($user = User::create($data)) {
+            return response([
+                "id" => $user->id,
+                'first_name' => $user->first_name,
+                "last_name" => $user->last_name,
+                "username" => $user->username,
+                "email" => $user->email,
+                "role" => $user->role,
+                "gender" => $user->gender,
+                "phone_number" => $user->phone_number,
+                "status" => $user->address->status,
+                "state" => $user->address->state,
+                "city" => $user->address->city,
+                "address" => $user->address->address,
+                "joining_date" => $user->created_at,
+                "last_seen" => $user->last_seen
+            ], 200);
+        } else {
+            abort(500, "Database Error.");
+        }
     }
-        else 
-        echo "null!!!"; 
-        */
-    }
-    
-    
+
+
 
     /**
      * Display the specified resource.
@@ -117,12 +133,12 @@ class UsersController extends Controller
     public function show($username)
     {
         //
-        $Users=User::where('username',$username)->get();
+        $Users = User::where('username', $username)->get();
 
-        $response=collect();
-        foreach($Users as $user){
+        $response = collect();
+        foreach ($Users as $user) {
 
-            $data=[
+            $data = [
                 "id" => $user->id,
                 'first_name' => $user->first_name,
                 "last_name" => $user->last_name,
@@ -138,6 +154,7 @@ class UsersController extends Controller
                 "last_seen" => $user->last_seen,
                 "joining_date" => $user->create_time
             ];
+
             $response->push($data);
         }
         return $response;
@@ -146,24 +163,13 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param  Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        // 
     }
 
     /**
@@ -175,13 +181,10 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
-        if($response = User::destroy($id))
+        if ($response = User::destroy($id))
+            return response(['id' => $id, 200]);
 
-        return response(['id'=>'$id',200]);
-
-          else
-          return response(['id'=>'$id',400]);
-          
+        else
+            return response(['id' => $id, 400]);
     }
 }
-
