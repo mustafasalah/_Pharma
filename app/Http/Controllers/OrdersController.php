@@ -97,26 +97,6 @@ class OrdersController extends Controller
         }
         return $total;
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the order details for every order showing the whole products of the order.
@@ -176,12 +156,121 @@ class OrdersController extends Controller
 
 
     /**
-     * Show the form for editing the specified resource.
+     * Display a listing of the resource.
      *
-     * @param  \App\Models\Orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function edit(Orders $orders)
+    public function index()
+    {
+        //
+        $Orders=Orders::all();
+
+        $response=collect();
+        foreach($Orders as $order){
+
+            $products=OrdersProducts::get(
+                'price'
+            )->first();
+            $products=$products->price;
+
+           /* $company=Company::where('id',$product->product->company)->get('name')->first();
+            $company=$company->name;
+
+            $order=Orders::get('type')->first();
+            $order=$order->type;*/
+            $data=[
+                "id" => $order->id,
+                "type" => $order->type,
+                "price" => $products,
+                "status" => $order->status,
+                "handled_by" => 
+                     [
+                        "id" => $order->employee->id,
+                        "name" => $order->employee->fullname
+                     ],
+                "date" =>  $order->created_at,
+                "payment" => 
+                     [
+                         "method" => $order->payment_method ,
+                         "proof" => $order->payment_proof_screenshot
+                     ],
+                "products" => 
+                $order->products->map(function($product) {
+                    return [
+                        "name" => $product->name,
+                        "qty" => $product->pivot->quantity,
+                        "price" => $product->pivot->price
+                    ];
+                }),
+                "products_amount" => $order->products_amount,
+                "discount" => $order->discount,
+                "vat" => $order->vat,
+                "delivery" => $order->delivery
+            ];
+            $response->push($data);
+        }
+        return $response;
+    }
+    /*{
+        id: 23820,
+        type: "local",
+        price: 5400,
+        status: "finished",
+        handled_by: {
+            id: 1,
+            name: "Mustafa Salah",
+        },
+        date: "24-09-2021 12:34:03 PM",
+        payment: {
+            method: "cash",
+            proof: "/assets/images/pay.jpg",
+        },
+        products: [
+            {
+                name: "Diarrhoea. Relief - Loperamide Capsules",
+                qty: 1,
+                price: 1200,
+            },
+            {
+                name: "Ovex Family Pack Tablets",
+                qty: 2,
+                price: 1400,
+            },
+        ],
+        products_amount: 5400,
+        discount: 0,
+        vat: 0,
+        delivery: 0,
+    }*/
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }
@@ -190,10 +279,10 @@ class OrdersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Orders $orders)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -201,10 +290,10 @@ class OrdersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Orders  $orders
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Orders $orders)
+    public function destroy($id)
     {
         //
     }
