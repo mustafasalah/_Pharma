@@ -37,6 +37,7 @@ Route::get('inventoryItems/search/{data}', [InventoryItemsController::class,'sea
 Route::get('inventoryItems/all', [InventoryItemsController::class,'all'])->name('inventoryItems - React');
 //phone Api
 Route::get('inventoryItems', [InventoryItemsController::class,'index'])->name('inventoryItems - Flutter');
+Route::get('inventoryItems/namesList',[InventoryItemsController::class,'namesList'])->name('UX products names - Flutter');
 //end of phone Api
 
 //Addresses Controller Route

@@ -69,7 +69,7 @@ class InventoryItemsController extends Controller
                 "category" => $category,
                 "price" => $product->price,
                 "image" => $product->product->photo,
-                "des" => $product->product->description
+                "des" => $product->product->unit
             ];
             $response->push($data);
         }
@@ -230,7 +230,7 @@ class InventoryItemsController extends Controller
                 "category" => $category,
                 "prices" => $prices,//the price should change
                 "image" => $product->first()->product->photo,
-                "des" => $product->first()->product->description
+                "des" => $product->first()->product->unit
             ];
             $response->push($data);
             // return $response;
@@ -281,5 +281,20 @@ class InventoryItemsController extends Controller
              $response->push($data);
          }
          return $response;
+    }
+
+    public function namesList()
+    {
+        $inventoryItems = InventoryItems::with(
+            'product'
+            )->get();
+        $products = $inventoryItems->pluck('product');
+        return response(
+            $products->pluck('name'),
+            201,
+            [
+                'content-type' => 'application/json'
+            ]
+        );
     }
 }
