@@ -28,22 +28,20 @@ class PharmacyBranchesController extends Controller
      */
     public function index()
     {
-        $pharmacyBranches=PharmacyBranches::all();
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacy;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacyPhoneNumbers;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->address;
-            }
-        );
+        $pharmacyBranches=PharmacyBranches::where(
+            'status','=','active'
+            )->with(
+                'pharmacy'
+                )->with(
+                    'pharmacyPhoneNumbers'
+                    )->with(
+                        'address'
+                        )->with(
+                            'bankAccount'
+                            )->with(
+                                'atmCard'
+                            )->get();
+        // return $pharmacyBranches;
         $response=collect();
 
         foreach($pharmacyBranches as $pharmacyBranch)
@@ -55,20 +53,60 @@ class PharmacyBranchesController extends Controller
                     'phone_number',
                     'No Phone Number Available'
                 );
-            $phone = PharmacyBranchesController::phoneNumsCutter($phone);
             $data=[
                 'branch_id' => $pharmacyBranch->id,
                 'name' => $name,
-                'state' => $pharmacyBranch->address ? $pharmacyBranch->address->state : '',
-                'phone' => $phone,
+                'state' => $pharmacyBranch->address ? $this->fullAddress($pharmacyBranch->address) : '',
+                'phone' => $this->phoneNumsCutter($phone),
                 "email" => $pharmacyBranch ? $pharmacyBranch->email : '',
                 "website" => $pharmacyBranch ?  $pharmacyBranch->website : '',
                 "lat" => $pharmacyBranch->address ? $pharmacyBranch->address->latitude : '',
-                "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : ''
+                "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : '',
+                "delivery" => $this->deliveryStatus($pharmacyBranch->support_delivery),
+                "payment_details"=> [
+                    "MBOKAccountNo"=> $pharmacyBranch->bankAccount->account_no,
+                    "MBOKAccountOwner"=> $pharmacyBranch->bankAccount->account_owner_name,
+                    "MBOKBranchBank"=> $pharmacyBranch->bankAccount->bank_branch_name,
+                    "ATMCardNo"=> $pharmacyBranch->atmCard->card_no,
+                    "ATMBankName"=> $pharmacyBranch->atmCard->bank_name
+                    ]
             ];
             $response->push($data);
         }
-        return $response;
+        return response($response,
+        200,
+        [
+            'content-type' => 'application/json'
+            ]
+    );
+    }
+
+    /**
+     * Create the address string
+     * @author @OxSama
+     * @param  object $addressObj
+     * @return string
+     * the param $addressObj is Json  {
+     * "id": 2,
+     * "state": "Bessie VonRueden",
+     * "city": "Reynoldschester",
+     * "address": "145 Emmanuel Street\nKayaside, IN 19252",
+     * "latitude": 58.224405,
+     * "longitude": -166.129946
+     * }
+     */
+    private function fullAddress($addressObj){
+        return $addressObj->state . ',' . $addressObj->city . ',' . $addressObj->address;
+    }
+
+    /**
+     * Create the address string
+     * @author @OxSama
+     * @param  int $delivery
+     * @return boolean
+     */
+    private function deliveryStatus($delivery){
+        return $delivery==0 ? false:true;
     }
 
     /**
@@ -100,47 +138,49 @@ class PharmacyBranchesController extends Controller
      */
     public function show($id)
     {
-        $pharmacyBranches=collect();
-        $pharmacyBranches->push(PharmacyBranches::find($id));
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacy;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacyPhoneNumbers;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->address;
-            }
-        );
-        $response=collect();
-        foreach($pharmacyBranches as $pharmacyBranch)
-        {
-            $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
-            $phone = PharmaciesPhoneNumbers::where(
-                'pharmacy_branch_id',$pharmacyBranch->id
-                )->get(
-                    'phone_number',
-                    'No Phone Number Available'
-                );
-            $phone = PharmacyBranchesController::phoneNumsCutter($phone);
-            $data=[
-                'branch_id' => $pharmacyBranch->id,
-                'name' => $name,
-                'state' => $pharmacyBranch->address->state,
-                'phone' => $phone,
-                "email" => $pharmacyBranch->email,
-                "website" => $pharmacyBranch->website,
-                "lat" => $pharmacyBranch->address->latitude,
-                "long" => $pharmacyBranch->address->longitude
-            ];
-            $response->push($data);
-        }
-        return $response->first();
+        $pharmacyBranch=PharmacyBranches::where(
+            'status','=','active'
+            )->with(
+                'pharmacy'
+                )->with(
+                    'pharmacyPhoneNumbers'
+                    )->with(
+                        'address'
+                        )->with(
+                            'bankAccount'
+                            )->with(
+                                'atmCard'
+                                )->find($id);
+        $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
+        $phone = PharmaciesPhoneNumbers::where(
+            'pharmacy_branch_id',$pharmacyBranch->id
+            )->get(
+                'phone_number',
+                'No Phone Number Available'
+            );
+        return response([
+            'branch_id' => $pharmacyBranch->id,
+            'name' => $name,
+            'state' => $pharmacyBranch->address ? $this->fullAddress($pharmacyBranch->address) : '',
+            'phone' => $this->phoneNumsCutter($phone),
+            "email" => $pharmacyBranch ? $pharmacyBranch->email : '',
+            "website" => $pharmacyBranch ?  $pharmacyBranch->website : '',
+            "lat" => $pharmacyBranch->address ? $pharmacyBranch->address->latitude : '',
+            "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : '',
+            "delivery" => $this->deliveryStatus($pharmacyBranch->support_delivery),
+            "payment_details"=> [
+                "MBOKAccountNo"=> $pharmacyBranch->bankAccount->account_no,
+                "MBOKAccountOwner"=> $pharmacyBranch->bankAccount->account_owner_name,
+                "MBOKBranchBank"=> $pharmacyBranch->bankAccount->bank_branch_name,
+                "ATMCardNo"=> $pharmacyBranch->atmCard->card_no,
+                "ATMBankName"=> $pharmacyBranch->atmCard->bank_name
+                ]
+        ],
+        200,
+        [
+            'content-type' => 'application/json'
+            ]
+    );
     }
 
     /** Format the phone numbers
@@ -148,7 +188,7 @@ class PharmacyBranchesController extends Controller
      *  @param  $phone array[] of phone numbers
      *  @return string phone numbers "+249##########    -   +249##########  -....."
      */
-    private static function phoneNumsCutter($phone)
+    private function phoneNumsCutter($phone)
     {
         $phoneNums='';
         foreach($phone as $phoneNum){

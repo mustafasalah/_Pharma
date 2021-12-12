@@ -52,7 +52,8 @@ Route::get('orders/{id}', [OrdersController::class,'show'])->name('order details
 // end of phone Api
 
 //pharmacy Branches table controller
-Route::resource('PharmaciesBranches', PharmacyBranchesController::class);//modified from */Pharmacies*
+Route::get('pharmaciesBranches', [PharmacyBranchesController::class,'index'])->name('Pharmacies - Flutter');//modified from */Pharmacies*
+Route::get('pharmaciesBranches/{id}', [PharmacyBranchesController::class,'show'])->name('One Pharmacy - Flutter');
 
 /** Register and login routes */
 Route::post('/register',[AuthController::class,'register'])->name('Register - BOTH');
