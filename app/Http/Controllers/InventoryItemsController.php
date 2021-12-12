@@ -35,7 +35,7 @@ class InventoryItemsController extends Controller
      */
     public function store(Request $request)
     {
-        //undone ///////////////////////////////////////////////////
+        //undone
     }
 
     /**
@@ -235,7 +235,13 @@ class InventoryItemsController extends Controller
             $response->push($data);
             // return $response;
         }
-        return $response;
+        return response(
+            $response,
+            201,
+            [
+                'content-type' => 'application/json'
+            ]
+        );
     }
 
     public function all()

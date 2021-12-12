@@ -43,10 +43,11 @@ Route::get('inventoryItems', [InventoryItemsController::class,'index'])->name('i
 // Route::resource('Addresses',AddressesController::class);/** uncomment to activate the addresses controller */
 
 //orders controller Routes
-Route::get('orders', [OrdersController::class,'index'])->name('orders React');
+Route::get('orders', [OrdersController::class,'index'])->name('orders - React');
 //phone Api
 Route::get('orders/allOrdersExceptRejected',[OrdersController::class,'allOrdersExceptRejected'])->name('Orders Except Rejected - Flutter');
 Route::get('orders/allOrders', [OrdersController::class,'allOrders'])->name('Orders - Flutter');
+Route::get('orders/{id}', [OrdersController::class,'show'])->name('order details - Flutter');
 // end of phone Api
 
 //pharmacy Branches table controller
