@@ -23,7 +23,7 @@ class InventoryItemsController extends Controller
     {
         $Products = InventoryItems::all()->groupBy('product_id');
         // return $Products[2];
-        return InventoryItemsController::buildResponse($Products);
+        return $this->buildResponse($Products);
     }
 
 
@@ -149,7 +149,7 @@ class InventoryItemsController extends Controller
         // return $inventoryItems[2]->unique();
         $inventoryItems = InventoryItemsController::uniqueJson($inventoryItems);
         // return $inventoryItems;
-        return InventoryItemsController::buildResponse($inventoryItems);
+        return $this->buildResponse($inventoryItems);
     }
 
 
@@ -194,9 +194,9 @@ class InventoryItemsController extends Controller
      * "des": String
      * }
      */
-    private static function buildResponse($Products){
+    private function buildResponse($inventoryItems){
         $response=collect();
-        foreach($Products as $product){
+        foreach($inventoryItems as $product){
             $product->first(function($product){
                 return $product->product;
             });
@@ -230,7 +230,8 @@ class InventoryItemsController extends Controller
                 "category" => $category,
                 "prices" => $prices,//the price should change
                 "image" => $product->first()->product->photo,
-                "des" => $product->first()->product->unit
+                "des" => $product->first()->product->unit,
+                "prescription" => $this->prescription($product->first()->product->need_prescreption)
             ];
             $response->push($data);
             // return $response;
@@ -242,6 +243,17 @@ class InventoryItemsController extends Controller
                 'content-type' => 'application/json'
             ]
         );
+    }
+
+    /**
+     * Prescription status
+     * @author @OxSama
+     * @param tinyint $prescription
+     * @return boolean
+     *
+     */
+    private function prescription($prescription){
+        return $prescription==0 ? false:true;
     }
 
     public function all()

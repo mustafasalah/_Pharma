@@ -94,7 +94,7 @@ Route::group(['middleware' => ['auth:sanctum'] ],function () {
 
 //Public route *2*......
 //users table controller route
-Route::resource('users', UsersController::class);
+Route::apiResource('users', UsersController::class);
 
 //categories table controller route
 Route::get('categories', [CategoriesController::class,'index'])->name('Categories - React');
