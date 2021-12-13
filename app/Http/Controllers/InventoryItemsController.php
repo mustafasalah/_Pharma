@@ -231,7 +231,12 @@ class InventoryItemsController extends Controller
                 "prices" => $prices,//the price should change
                 "image" => $product->first()->product->photo,
                 "des" => $product->first()->product->unit,
-                "prescription" => $this->prescription($product->first()->product->need_prescreption)
+                "prescription" => $this->prescription($product->first()->product->need_prescreption),
+                "ingredient" => $product->first()->product->ingredient,
+                "description" => $product->first()->product->description,
+                "usage_instructions" => $product->first()->product->usage_instructions,
+                "warnings" => $product->first()->product->warnings,
+                "side_effects" => $product->first()->product->side_effects,
             ];
             $response->push($data);
             // return $response;
