@@ -216,7 +216,7 @@ class InventoryItemsController extends Controller
                 $pharmacyBranchesIds->push($specificProduct->pharmacy_branch_id);
                 $BranchNameAndId = PharmacyBranches::where('id', $specificProduct->pharmacy_branch_id)->get(['name','pharmacy_id'])->first();
                 $pharmacyName = Pharmacies::where('id',$BranchNameAndId->pharmacy_id)->get('name')->first();
-                $pharmacyBranchesNames->push($branchName = $pharmacyName->name . '  -   ' .$BranchNameAndId->name);
+                $pharmacyBranchesNames->push($this->pharmacyBranchName($pharmacyName->name,$BranchNameAndId->name));
                 $ids->push($specificProduct->id);
                 $prices->push($specificProduct->price);
             }
@@ -248,6 +248,12 @@ class InventoryItemsController extends Controller
                 'content-type' => 'application/json'
             ]
         );
+    }
+
+
+    public function pharmacyBranchName($pharmacyName,$BranchName){
+        return ($BranchName == '' || $BranchName == 'main branch')?  $pharmacyName
+        : $pharmacyName . ' - ' .$BranchName;
     }
 
     /**

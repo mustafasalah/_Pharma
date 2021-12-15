@@ -46,7 +46,7 @@ class PharmacyBranchesController extends Controller
 
         foreach($pharmacyBranches as $pharmacyBranch)
         {
-            $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
+            $name = (new InventoryItemsController)->pharmacyBranchName($pharmacyBranch->pharmacy->name,$pharmacyBranch->name);
             $phone = PharmaciesPhoneNumbers::where(
                 'pharmacy_branch_id',$pharmacyBranch->id
                 )->get(
@@ -139,18 +139,18 @@ class PharmacyBranchesController extends Controller
     public function show($id)
     {
         $pharmacyBranch=PharmacyBranches::where(
-            'status','=','active'
-            )->with(
-                'pharmacy'
-                )->with(
-                    'pharmacyPhoneNumbers'
-                    )->with(
-                        'address'
-                        )->with(
-                            'bankAccount'
-                            )->with(
-                                'atmCard'
-                                )->find($id);
+            'status', '=', 'active'
+        )->with(
+            'pharmacy'
+        )->with(
+            'pharmacyPhoneNumbers'
+        )->with(
+            'address'
+        )->with(
+            'bankAccount'
+        )->with(
+            'atmCard'
+        )->find($id);
         $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
         $phone = PharmaciesPhoneNumbers::where(
             'pharmacy_branch_id',$pharmacyBranch->id
@@ -183,10 +183,14 @@ class PharmacyBranchesController extends Controller
     );
     }
 
-    /** Format the phone numbers
-     *  @author @OxSama
-     *  @param  $phone array[] of phone numbers
-     *  @return string phone numbers "+249##########    -   +249##########  -....."
+    /**
+     * Format the phone numbers
+     *
+     * @param $phone array[] of phone numbers
+     *
+     * @return string phone numbers "+249##########    -   +249##########  -....."
+     *
+     * @author @OxSama
      */
     private function phoneNumsCutter($phone)
     {
