@@ -39,20 +39,23 @@ Route::post('inventoryItems/{pharmacyBranch}', [InventoryItemsController::class,
 Route::put('inventoryItems/{id}', [InventoryItemsController::class, 'update'])->name('inventoryItems - update');
 //phone Api
 Route::get('inventoryItems', [InventoryItemsController::class, 'index'])->name('inventoryItems - Flutter');
+Route::get('inventoryItems/namesList', [InventoryItemsController::class, 'namesList'])->name('UX products names - Flutter');
 //end of phone Api
 
 //Addresses Controller Route
 // Route::resource('Addresses',AddressesController::class);/** uncomment to activate the addresses controller */
 
 //orders controller Routes
-Route::get('orders', [OrdersController::class, 'index'])->name('orders React');
+Route::get('orders', [OrdersController::class, 'index'])->name('orders - React');
 //phone Api
 Route::get('orders/allOrdersExceptRejected', [OrdersController::class, 'allOrdersExceptRejected'])->name('Orders Except Rejected - Flutter');
 Route::get('orders/allOrders', [OrdersController::class, 'allOrders'])->name('Orders - Flutter');
+Route::get('orders/{id}', [OrdersController::class, 'show'])->name('order details - Flutter');
 // end of phone Api
 
 //pharmacy Branches table controller
-Route::resource('PharmaciesBranches', PharmacyBranchesController::class); //modified from */Pharmacies*
+Route::get('pharmaciesBranches', [PharmacyBranchesController::class, 'index'])->name('Pharmacies - Flutter'); //modified from */Pharmacies*
+Route::get('pharmaciesBranches/{id}', [PharmacyBranchesController::class, 'show'])->name('One Pharmacy - Flutter');
 
 /** Register and login routes */
 Route::post('/register', [AuthController::class, 'register'])->name('Register - BOTH');

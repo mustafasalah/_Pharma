@@ -25,7 +25,7 @@ class InventoryItemsController extends Controller
     {
         $Products = InventoryItems::all()->groupBy('product_id');
         // return $Products[2];
-        return InventoryItemsController::buildResponse($Products);
+        return $this->buildResponse($Products);
     }
 
 
@@ -105,7 +105,7 @@ class InventoryItemsController extends Controller
                 "category" => $category,
                 "price" => $product->price,
                 "image" => $product->product->photo,
-                "des" => $product->product->description
+                "des" => $product->product->unit
             ];
             $response->push($data);
         }
@@ -225,7 +225,7 @@ class InventoryItemsController extends Controller
         // return $inventoryItems[2]->unique();
         $inventoryItems = InventoryItemsController::uniqueJson($inventoryItems);
         // return $inventoryItems;
-        return InventoryItemsController::buildResponse($inventoryItems);
+        return $this->buildResponse($inventoryItems);
     }
 
 
@@ -270,10 +270,10 @@ class InventoryItemsController extends Controller
      * "des": String
      * }
      */
-    private static function buildResponse($Products)
+    private function buildResponse($inventoryItems)
     {
         $response = collect();
-        foreach ($Products as $product) {
+        foreach ($inventoryItems as $product) {
             $product->first(function ($product) {
                 return $product->product;
             });
@@ -294,7 +294,7 @@ class InventoryItemsController extends Controller
                 $pharmacyBranchesIds->push($specificProduct->pharmacy_branch_id);
                 $BranchNameAndId = PharmacyBranches::where('id', $specificProduct->pharmacy_branch_id)->get(['name', 'pharmacy_id'])->first();
                 $pharmacyName = Pharmacies::where('id', $BranchNameAndId->pharmacy_id)->get('name')->first();
-                $pharmacyBranchesNames->push($branchName = $pharmacyName->name . '  -   ' . $BranchNameAndId->name);
+                $pharmacyBranchesNames->push($this->pharmacyBranchName($pharmacyName->name, $BranchNameAndId->name));
                 $ids->push($specificProduct->id);
                 $prices->push($specificProduct->price);
             }
@@ -308,12 +308,43 @@ class InventoryItemsController extends Controller
                 "category" => $category,
                 "prices" => $prices, //the price should change
                 "image" => $product->first()->product->photo,
-                "des" => $product->first()->product->description
+                "des" => $product->first()->product->unit,
+                "prescription" => $this->prescription($product->first()->product->need_prescreption),
+                "ingredient" => $product->first()->product->ingredient,
+                "description" => $product->first()->product->description,
+                "usage_instructions" => $product->first()->product->usage_instructions,
+                "warnings" => $product->first()->product->warnings,
+                "side_effects" => $product->first()->product->side_effects,
             ];
             $response->push($data);
             // return $response;
         }
-        return $response;
+        return response(
+            $response,
+            201,
+            [
+                'content-type' => 'application/json'
+            ]
+        );
+    }
+
+
+    public function pharmacyBranchName($pharmacyName, $BranchName)
+    {
+        return ($BranchName == '' || $BranchName == 'main branch') ?  $pharmacyName
+            : $pharmacyName . ' - ' . $BranchName;
+    }
+
+    /**
+     * Prescription status
+     * @author @OxSama
+     * @param tinyint $prescription
+     * @return boolean
+     *
+     */
+    private function prescription($prescription)
+    {
+        return $prescription == 0 ? false : true;
     }
 
     public function all()
@@ -354,5 +385,20 @@ class InventoryItemsController extends Controller
             $response->push($data);
         }
         return $response;
+    }
+
+    public function namesList()
+    {
+        $inventoryItems = InventoryItems::with(
+            'product'
+        )->get();
+        $products = $inventoryItems->pluck('product');
+        return response(
+            $products->pluck('name'),
+            201,
+            [
+                'content-type' => 'application/json'
+            ]
+        );
     }
 }
