@@ -11,6 +11,8 @@ class Company extends Model
 
     public $timestamps =false;
 
+    protected $guarded = [];
+
     /**Relations */
 
     // Company has many products

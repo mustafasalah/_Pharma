@@ -10,6 +10,8 @@ class Employees extends Model
     use HasFactory;
     public $timestamps=false;
 
+    protected $guarded = [];
+
     /** Relations */
 
     public function orders()

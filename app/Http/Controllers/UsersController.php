@@ -169,6 +169,52 @@ class UsersController extends Controller
     public function edit(Request $request, $id)
     {
         // 
+        if ($request->anyFilled(["state", "city", "address"])) {
+            $address = Addresses::where([
+                "state" => $request->input('state'),
+                "city" => $request->input('city'),
+                "address" => $request->input('address')
+            ])->first();
+
+            if ($address === null) {
+                $address = Addresses::create([
+                    "state" => $request->input('state'),
+                    "city" => $request->input('city'),
+                    "address" => $request->input('address')
+                ]);
+            }
+        }
+
+        $data = [
+            "id" => $id,
+            'first_name' => $request->input('first_name'),
+            "last_name" => $request->input('last_name'),
+            "username" => $request->input('username'),
+            "email" => $request->input('email'),
+            "role" => $request->input('role'),
+            "gender" => $request->input('gender'),
+            "phone_number" => $request->input('phone_number'),
+            "status" => $request->input('status'),
+            "address_id" => $address->id,
+        ];
+        $user = User::where('id', $id)->first();
+        if ($user->update($data)) {
+            return response([
+                'first_name' => $user->first_name,
+                "last_name" => $user->last_name,
+                "username" => $user->username,
+                "email" => $user->email,
+                "role" => $user->role,
+                "gender" => $user->gender,
+                "phone_number" => $user->phone_number,
+                "status" => $user->status, 
+                "state" => $user->address->state,
+                "city" => $user->address->city,
+                "address" => $user->address->address
+            ], 200);
+        } else {
+            abort(500, "Database Error.");
+        }
     }
 
     /**

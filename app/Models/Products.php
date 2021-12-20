@@ -10,6 +10,8 @@ class Products extends Model
     use HasFactory;
     public $timestamps=false;
 
+    protected $guarded = [];
+
     /** Relations */
 
     // In the pivot table the products belongs to many orders
