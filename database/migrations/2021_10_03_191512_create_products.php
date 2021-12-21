@@ -21,7 +21,7 @@ class CreateProducts extends Migration
             $table->foreignId('category')->constrained('categories')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('company')->constrained('companies')->onUpdate('cascade');
             $table->string('ingredient')->nullable();
-            $table->boolean('need_prescreption')->default(false);
+            $table->boolean('need_prescription')->default(false);
             $table->text('description')->nullable();
             $table->text('usage_instructions')->nullable();
             $table->text('warnings')->nullable();

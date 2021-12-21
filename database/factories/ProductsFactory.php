@@ -30,7 +30,7 @@ class ProductsFactory extends Factory
             'category'=>Categories::factory()->create(),
             'company'=>Company::factory()->create(),
             'ingredient'=>$this->faker->text(),
-            'need_prescreption'=>$this->faker->boolean(20),
+            'need_prescription'=>$this->faker->boolean(90),
             'description'=>$this->faker->paragraph(),
             'usage_instructions'=>$this->faker->paragraph(2),
             'warnings'=>$this->faker->paragraph(),

@@ -14,7 +14,7 @@ class Employees extends Model
 
     public function orders()
     {
-        return $this->hasMany(Orders::class,'handeled_by');
+        return $this->hasMany(Orders::class,'handled_by');
     }
 
     public function pharmacyBranch()
