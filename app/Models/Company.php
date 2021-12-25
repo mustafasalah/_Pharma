@@ -16,11 +16,11 @@ class Company extends Model
     // Company has many products
     public function products()
     {
-        return $this->hasMany(Products::class,'company');
+        return $this->hasMany(Products::class,'company_id');
     }
 
     // Company has many Inventory Items through the products table
     public function inventoryItems(){
-        return $this->hasManyThrough(InventoryItems::class,Products::class,'company','product_id');
+        return $this->hasManyThrough(InventoryItems::class,Products::class,'company_id','product_id');
     }
 }
