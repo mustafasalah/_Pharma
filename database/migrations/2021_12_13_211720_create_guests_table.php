@@ -15,14 +15,27 @@ class CreateGuestsTable extends Migration
     {
         Schema::create('guests', function (Blueprint $table) {
             $table->id();
+
+            // $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
+            $table->unsignedBigInteger('address_id');
+            $table->unsignedBigInteger('order_id');
+
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
             $table->string('phone_number',14);
-            $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
             $table->timestamp('last_seen')->useCurrent();
             $table->timestamp('create_time')->useCurrent();
-            $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
+        });
+
+        Schema::table('guests', function(Blueprint $table){
+
+            $table->foreign('address_id')->references('id')->on('addresses')
+            ->onDelete('cascade');
+
+            $table->foreign('order_id')->references('id')->on('orders')
+            ->onDelete('cascade');
+
         });
     }
 

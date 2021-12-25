@@ -15,10 +15,20 @@ class CreateOrdersNotifications extends Migration
     {
         Schema::create('orders_notifications', function (Blueprint $table) {
             $table->id();
+
+            // $table->foreignId('order_id')->constrained('orders')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('order_id');
+
             $table->enum('type',['order']);
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
+
+        Schema::table('orders_notifications', function(Blueprint $table){
+
+            $table->foreign('order_id')->references('id')->on('orders');
+
+        });
+
     }
 
     /**

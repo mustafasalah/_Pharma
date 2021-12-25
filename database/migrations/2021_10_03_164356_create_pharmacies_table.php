@@ -20,8 +20,12 @@ class CreatePharmaciesTable extends Migration
         Schema::create('pharmacies', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->foreignId("owner")->constrained("users")->onDelete('cascade')->onUpdate('cascade');//id of the owner when the user is deleted the pharamacy is deleted
+            $table->unsignedBigInteger("owner_id");//id of the owner_id when the user is deleted the pharmacy is deleted
             // $table->timestamps();
+        });
+        /**Foreign Keys Constraints */
+        Schema::table('pharmacies', function (Blueprint $table){
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

@@ -16,9 +16,8 @@ class CreateAtmCards extends Migration
         Schema::create('atm_cards', function (Blueprint $table) {
             $table->id();
             $table->string('bank_name');
+            $table->string('card_owner_name');
             $table->unsignedBigInteger('card_no');
-            // $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
-//            $table->timestamps();
         });
     }
 
