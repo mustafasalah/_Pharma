@@ -48,19 +48,18 @@ class UserFactory extends Factory
         // $username = $this->faker->userName() . random_int(0,1000);
         // $ = $this->faker->() . random_int(0,1000);
         return [
+            'address_id'=> Addresses::factory()->create(),
+
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'username' => $this->faker->unique()->userName,
             'password' =>$this->faker->password(),
-            'gender'=>$this->faker->randomElement(['m','f']),
             'email' => $this->faker->unique()->safeEmail,
             'phone_number' =>$this->faker->numerify('+249##########'),
-            'address_id'=> Addresses::factory(),
-            'role'=>$this->faker->randomElement(['admin','pharmacy_owner','user']),
+            'role'=>$this->faker->randomElement(['admin', 'pharmacy_owner', 'user', 'supervisor', 'pharmacist']),
+            'gender'=>$this->faker->randomElement(['m','f', null]),
             'status'=>$this->faker->randomElement(
-                ['activated',
-                'non-activated',
-                'banned']
+                ['activate','non-activate','banned']
             ),
             'last_seen'=>$this->faker->dateTimeThisYear(),
             'create_time'=>$this->faker->dateTimeThisYear()

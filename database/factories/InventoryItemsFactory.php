@@ -51,10 +51,14 @@ class InventoryItemsFactory extends Factory
             'product_id'=>Products::factory()->create(),
             'supplier_id'=>Suppliers::factory()->create(),
             'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
-            'price'=>$this->faker->numberBetween(0, 2147412),
-            'cost'=>$this->faker->numberBetween(0, 374122),
-            'stock'=>$this->faker->numberBetween(0, 913442),
-            'price'=>$this->faker->numberBetween(0, 50),
+
+            'stock'=>$this->faker->numberBetween(0, 100),
+            'reserved'=>$this->faker->numberBetween(0, 50),
+            'price'=>$this->faker->randomFloat(5, 0, 10000),
+            'cost'=>$this->faker->randomFloat(5, 0, 10000),
+
+            'online_order' => $this->faker->boolean(90),
+
             'arrival_date'=>$this->faker->dateTimeThisYear(),
             'expire_date'=>$this->faker->dateTimeThisYear()
         ];

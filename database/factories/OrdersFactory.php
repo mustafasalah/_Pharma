@@ -49,6 +49,19 @@ class OrdersFactory extends Factory
     public function definition()
     {
         return [
+            'employee_id' => Employees::factory()->create(),
+            'user_id' => User::factory()->create(),
+            'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
+            'address_id'=> Addresses::factory()->create(),
+
+
+            'products_amount'=>$this->faker->numberBetween(0, 10),
+            'discount' => $this->faker->randomFloat(5, 0, 10000),
+            'vat' => $this->faker->randomFloat(5, 0, 10000),
+            'delivery' => $this->faker->randomFloat(5, 0, 10000),
+
+            // 'payment_proof_screenshot'=>$this->faker->sentence(),
+
             'type'=>$this->faker->randomElement(['local','online']),
             'status'=>$this->faker->randomElement(
                 ['finished',
@@ -61,14 +74,9 @@ class OrdersFactory extends Factory
                 'ATM Card',
                 'Cash']
             ),
-            'products_amount'=>$this->faker->numberBetween(0, 234412),
-            'vat'=>$this->faker->numberBetween(0, 441223),
-            'handled_by'=>Employees::factory()->create(),
+
             'created_at'=>$this->faker->dateTimeThisYear(),
-            'users_id'=>User::factory()->create(),
-            'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
-            'address_id'=>Addresses::factory()->create(),
-            'payment_proof_screenshot'=>$this->faker->sentence()
+            // 'users_id'=>User::factory()->create(),
         ];
     }
 }

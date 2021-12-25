@@ -47,7 +47,7 @@ class PharmaciesFactory extends Factory
     {
         return [
             'name'=>$this->faker->name(),
-            'owner'=>User::factory()->create()
+            'owner_id'=>User::factory()->create()
         ];
     }
 }

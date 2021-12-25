@@ -47,11 +47,11 @@ class AddressesFactory extends Factory
     public function definition()
     {
         return [
-            'state'=>$this->faker->name(),
-            'city'=>$this->faker->city(),
-            'address'=>$this->faker->address(),
-            'latitude'=>$this->faker->latitude(),
-            'longitude'=>$this->faker->longitude()
+            'state'=> $this->faker->randomElement(['Khartoum']),
+            'city'=> $this->faker->city(),
+            'address'=> $this->faker->address(),
+            'latitude'=> $this->faker->latitude($min = 15.4,$max = 15.6),
+            'longitude'=> $this->faker->longitude($min = 32.4, $max = 32.6)
         ];
     }
 }

@@ -50,8 +50,8 @@ class OrdersProductsFactory extends Factory
             'product_id'=>Products::factory()->create(),
             'order_id'=>Orders::factory()->create(),
             'quantity'=>$this->faker->randomDigit(),
-            'price'=>$this->faker->numberBetween(0, 12345),
-            'cost'=>$this->faker->numberBetween(0, 12345)
+            'price'=>$this->faker->randomFloat(5, 0, 10000),
+            'cost'=>$this->faker->randomFloat(5, 0, 10000)
         ];
     }
 }

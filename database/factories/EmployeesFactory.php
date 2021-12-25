@@ -14,6 +14,7 @@ namespace Database\Factories;
 
 use App\Models\Employees;
 use App\Models\PharmacyBranches;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  *  Class Doc Comment
@@ -47,13 +48,8 @@ class EmployeesFactory extends Factory
     {
         // $username = $this->faker->userName() . random_int(0,1000);
         return [
-            'fullname'=>$this->faker->name(),
-            'username'=>$this->faker->unique()->userName,
-            'password'=>$this->faker->password(),
-            'role'=>$this->faker->randomElement(['pharmacist','branch_manager']),
+            'user_id' => User::factory()->create(),
             'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
-            'phone_number'=>$this->faker->numerify('+249##########'),
-            'gender'=>$this->faker->randomElement(['m','f']),
             'work_from'=>$this->faker->time(),
             'work_to'=>$this->faker->time(),
         ];

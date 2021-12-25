@@ -48,7 +48,8 @@ class AtmCardsFactory extends Factory
     {
         return [
             'bank_name'=>$this->faker->name(),
-            'card_no'=>$this->faker->creditCardNumber()
+            'card_no'=>$this->faker->creditCardNumber(),
+            'card_owner_name' => $this->faker->name()
         ];
     }
 }

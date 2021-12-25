@@ -51,17 +51,22 @@ class PharmacyBranchesFactory extends Factory
     {
         return [
             'pharmacy_id'=>Pharmacies::factory()->create(),
+            'address_id'=>Addresses::factory()->create(),
+            'atm_card_id'=>AtmCards::factory()->create(),
+            'bank_account_id'=>BankAccounts::factory()->create(),
+
+
             'name'=>$this->faker->randomElement(
                 ['Bahry branch',
                 'Khartoum branch',
-                'Umdurman branch']
+                'Umdurman branch',
+                '']
             ),
             'email'=>$this->faker->unique()->safeEmail,
-            'address_id'=>Addresses::factory()->create(),
-            'status'=>$this->faker->randomElement(["pending","active","rejected"]),
             'support_delivery'=>$this->faker->boolean(90),
-            'atm_card'=>AtmCards::factory()->create(),
-            'bank_account'=>BankAccounts::factory()->create(),
+
+            'status'=>$this->faker->randomElement(["pending","active","rejected"]),
+
             'created_at'=>$this->faker->dateTimeThisYear()
         ];
     }
