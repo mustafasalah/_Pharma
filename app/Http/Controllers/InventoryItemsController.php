@@ -57,7 +57,7 @@ class InventoryItemsController extends Controller
         $response=collect();
         foreach($Products as $product){
             $category=Categories::where(
-                'id',$product->product->category
+                'id',$product->product->category_id
             )->get(
                 'name'
             )->first();
@@ -202,7 +202,7 @@ class InventoryItemsController extends Controller
             });
             // return $product;
             $category=Categories::where(
-                    'id' , $product->first()->product->category
+                    'id' , $product->first()->product->category_id
                     )->get(
                         'name'
                     )->first();
@@ -275,13 +275,13 @@ class InventoryItemsController extends Controller
          $response=collect();
          foreach($Products as $product){
              $category=Categories::where(
-                 'id',$product->product->category
+                 'id',$product->product->category_id
              )->get(
                  'name'
              )->first();
              $category=$category->name;
 
-             $company=Company::where('id', $product->product->company)->get('name')->first();
+             $company=Company::where('id', $product->product->company_id)->get('name')->first();
              $company=$company->name;
 
              $data=[
