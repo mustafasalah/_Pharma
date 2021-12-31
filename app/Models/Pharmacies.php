@@ -17,7 +17,7 @@ class Pharmacies extends Model
         return $this->hasMany(PharmacyBranches::class,'pharmacy_id');
     }
 
-    public function owner()
+    public function ownedBy()
     {
         return $this->belongsTo(User::class,'owner');
     }

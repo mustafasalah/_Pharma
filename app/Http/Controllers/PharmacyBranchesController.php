@@ -35,13 +35,7 @@ class PharmacyBranchesController extends Controller
         foreach($pharmacyBranches as $pharmacyBranch)
         {
             $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
-            $phone = PharmaciesPhoneNumbers::where(
-                'pharmacy_branch_id',$pharmacyBranch->id
-                )->get(
-                    'phone_number',
-                    'No Phone Number Available'
-                );
-            $phone = PharmacyBranchesController::phoneNumsCutter($phone);
+            $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
             $data=[
                 'branch_id' => $pharmacyBranch->id,
                 'name' => $name,

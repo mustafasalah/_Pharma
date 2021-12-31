@@ -14,10 +14,10 @@ class Products extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Orders::class,'orders_products','product_id','order_id');
+        return $this->belongsToMany(Orders::class,'orders_products')->withPivot("quantity", "price", "cost");
     }
-
-    public function category()
+//modified by saeed
+    public function categories()
     {
         return $this->belongsTo(Categories::class,'id');
     }
@@ -26,8 +26,8 @@ class Products extends Model
     {
         return $this->hasMany(InventoryItems::class,'product_id');
     }
-
-    public function company()
+//modified by saeed
+    public function companies()
     {
         return $this->belongsTo(Company::class,'id');
     }
