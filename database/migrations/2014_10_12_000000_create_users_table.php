@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('username',20)->unique();
+            $table->string('username',1000)->unique();
             $table->string('password');
             $table->enum('gender',['m','f']);
-            $table->string('email')->unique();
+            $table->string('email',1000)->unique();
             $table->string('phone_number',14);
             $table->foreignId('address_id')->constrained('addresses')->onUpdate('cascade');
             $table->enum('role',['admin','pharmacy_owner','user'])->default('user');

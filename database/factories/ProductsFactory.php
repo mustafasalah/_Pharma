@@ -32,8 +32,8 @@ class ProductsFactory extends Factory
             'ingredient'=>$this->faker->text(),
             'need_prescreption'=>$this->faker->boolean(20),
             'description'=>$this->faker->paragraph(),
-            'usage_instructions'=>$this->faker->paragraphs(2),
-            'warnings'=>$this->faker->paragraphs(),
+            'usage_instructions'=>$this->faker->paragraph(2),
+            'warnings'=>$this->faker->paragraph(),
             'side_effects'=>$this->faker->paragraph(),
             'photo'=>$this->faker->sentence()
         ];

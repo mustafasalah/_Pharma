@@ -10,6 +10,8 @@ class Categories extends Model
     use HasFactory;
     public $timestamps=false;
 
+    protected $guarded = [];
+
     public function products()
     {
         return $this->hasMany(Products::class,'category');

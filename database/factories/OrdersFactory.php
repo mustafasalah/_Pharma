@@ -32,7 +32,7 @@ class OrdersFactory extends Factory
             'products_amount'=>$this->faker->numberBetween(0,234412),
             'vat'=>$this->faker->numberBetween(0,441223),
             'handeled_by'=>Employees::factory()->create(),
-            'created_at'=>$this->faker->dateTime(),
+            'created_at'=>$this->faker->dateTimeThisYear(),
             'users_id'=>User::factory()->create(),
             'pharmacy_branch_id'=>PharmacyBranches::factory()->create(),
             'address_id'=>Addresses::factory()->create(),

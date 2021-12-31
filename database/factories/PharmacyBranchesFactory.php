@@ -28,13 +28,13 @@ class PharmacyBranchesFactory extends Factory
         return [
             'pharmacy_id'=>Pharmacies::factory()->create(),
             // 'name'=>$this->faker->name(),
-            'email'=>$this->faker->unique()->safeEmail(),
+            'email'=>$this->faker->unique()->safeEmail,
             'address_id'=>Addresses::factory()->create(),
             'status'=>$this->faker->randomElement(["pending","active","rejected"]),
             'support_delivery'=>$this->faker->boolean(30),
             'atm_card'=>AtmCards::factory()->create(),
             'bank_account'=>BankAccounts::factory()->create(),
-            'created_at'=>$this->faker->dateTime('now')
+            'created_at'=>$this->faker->dateTimeThisYear()
         ];
     }
 }

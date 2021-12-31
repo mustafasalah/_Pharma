@@ -5,68 +5,113 @@ namespace App\Http\Controllers;
 use App\Models\PharmaciesPhoneNumbers;
 use App\Models\PharmacyBranches;
 use Illuminate\Http\Request;
-
+/**This class takes the requests from the Pharma Mobile to via route /api/Pharmacies
+ * It returns Pharmacies to be viewed
+ * created By @OxSama
+ */
 class PharmacyBranchesController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @author @OxSama
      * @return \Illuminate\Http\Response
+     * the response is Json  {
+     * 'branch_id' : $id
+     * 'name' : $name,
+     * 'state' : $state,
+     * 'phone' : $phone,
+     * 'email' : $email,
+     * 'website' : $website,
+     * 'lat' => $lat,
+     * 'long' : $long
+     * }
      */
     public function index()
     {
-        $pharmacyBranches=PharmacyBranches::all();
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacy;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacyPhoneNumbers;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->address;
-            }
-        );
+        $pharmacyBranches=PharmacyBranches::where(
+            'status','=','active'
+            )->with(
+                'pharmacy'
+                )->with(
+                    'pharmacyPhoneNumbers'
+                    )->with(
+                        'address'
+                        )->with(
+                            'bankAccount'
+                            )->with(
+                                'atmCard'
+                            )->get();
+        // return $pharmacyBranches;
         $response=collect();
+
         foreach($pharmacyBranches as $pharmacyBranch)
         {
+<<<<<<< HEAD
             $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
+=======
+            $name = (new InventoryItemsController)->pharmacyBranchName($pharmacyBranch->pharmacy->name,$pharmacyBranch->name);
+            $phone = PharmaciesPhoneNumbers::where(
+                'pharmacy_branch_id',$pharmacyBranch->id
+                )->get(
+                    'phone_number',
+                    'No Phone Number Available'
+                );
+>>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
             $data=[
                 'branch_id' => $pharmacyBranch->id,
                 'name' => $name,
-                'state' => $pharmacyBranch->address->state,
-                'phone' => $phone,
-                "email" => $pharmacyBranch->email,
-                "website" => $pharmacyBranch->website,
-                "lat" => $pharmacyBranch->address->latitude,
-                "long" => $pharmacyBranch->address->longitude
+                'state' => $pharmacyBranch->address ? $this->fullAddress($pharmacyBranch->address) : '',
+                'phone' => $this->phoneNumsCutter($phone),
+                "email" => $pharmacyBranch ? $pharmacyBranch->email : '',
+                "website" => $pharmacyBranch ?  $pharmacyBranch->website : '',
+                "lat" => $pharmacyBranch->address ? $pharmacyBranch->address->latitude : '',
+                "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : '',
+                "delivery" => $this->deliveryStatus($pharmacyBranch->support_delivery),
+                "payment_details"=> [
+                    "MBOKAccountNo"=> $pharmacyBranch->bankAccount->account_no,
+                    "MBOKAccountOwner"=> $pharmacyBranch->bankAccount->account_owner_name,
+                    "MBOKBranchBank"=> $pharmacyBranch->bankAccount->bank_branch_name,
+                    "ATMCardNo"=> $pharmacyBranch->atmCard->card_no,
+                    "ATMBankName"=> $pharmacyBranch->atmCard->bank_name
+                    ]
             ];
             $response->push($data);
         }
-        return $response;
-        /**return response()->json([
-            'name' => $name,
-            'state' => $state,
-            'phone' => $phone,
-            "email" => $email,
-            "website" => $website,
-            "lat" => $lat,
-            "long" => $long
-        ]); */
-        // {
-        //     "name":"CVS Pharmacy",
-        //     "state":"khartoum State,Khartoum,Khartoum 2",
-        //     "phone":"+249912000023 - +249112000023",
-        //     "email":"cvspharmacysupport@cvs-pharma.com",
-        //     "website":"www.cvs-Pharma.com",
-        //     "lat":15.569893951439786,
-        //     "long":32.53183948952209
-        // }
+        return response($response,
+        200,
+        [
+            'content-type' => 'application/json'
+            ]
+    );
+    }
+
+    /**
+     * Create the address string
+     * @author @OxSama
+     * @param  object $addressObj
+     * @return string
+     * the param $addressObj is Json  {
+     * "id": 2,
+     * "state": "Bessie VonRueden",
+     * "city": "Reynoldschester",
+     * "address": "145 Emmanuel Street\nKayaside, IN 19252",
+     * "latitude": 58.224405,
+     * "longitude": -166.129946
+     * }
+     */
+    private function fullAddress($addressObj){
+        return $addressObj->state . ',' . $addressObj->city . ',' . $addressObj->address;
+    }
+
+    /**
+     * Create the address string
+     * @author @OxSama
+     * @param  int $delivery
+     * @return boolean
+     */
+    private function deliveryStatus($delivery){
+        return $delivery==0 ? false:true;
     }
 
     /**
@@ -82,60 +127,77 @@ class PharmacyBranchesController extends Controller
 
     /**
      * Display the specified resource.
-     *
+     * @author @OxSama
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * the response is Json  {
+     * 'branch_id' : $id
+     * 'name' : $name,
+     * 'state' : $state,
+     * 'phone' : $phone,
+     * 'email' : $email,
+     * 'website' : $website,
+     * 'lat' => $lat,
+     * 'long' : $long
+     * }
      */
     public function show($id)
     {
-        $pharmacyBranches=collect();
-        $pharmacyBranches->push(PharmacyBranches::find($id));
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacy;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->pharmacyPhoneNumbers;
-            }
-        );
-        $pharmacyBranches->every(
-            function($pharmacyBranch){
-                return $pharmacyBranch->address;
-            }
-        );
-        $response=collect();
-        foreach($pharmacyBranches as $pharmacyBranch)
-        {
-            $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
-            $phone = PharmaciesPhoneNumbers::where(
-                'pharmacy_branch_id',$pharmacyBranch->id
-                )->get(
-                    'phone_number',
-                    'No Phone Number Available'
-                );
-            $phone = PharmacyBranchesController::phoneNumsCutter($phone);
-            $data=[
-                'branch_id' => $pharmacyBranch->id,
-                'name' => $name,
-                'state' => $pharmacyBranch->address->state,
-                'phone' => $phone,
-                "email" => $pharmacyBranch->email,
-                "website" => $pharmacyBranch->website,
-                "lat" => $pharmacyBranch->address->latitude,
-                "long" => $pharmacyBranch->address->longitude
-            ];
-            $response->push($data);
-        }
-        return $response->first();
+        $pharmacyBranch=PharmacyBranches::where(
+            'status', '=', 'active'
+        )->with(
+            'pharmacy'
+        )->with(
+            'pharmacyPhoneNumbers'
+        )->with(
+            'address'
+        )->with(
+            'bankAccount'
+        )->with(
+            'atmCard'
+        )->find($id);
+        $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
+        $phone = PharmaciesPhoneNumbers::where(
+            'pharmacy_branch_id',$pharmacyBranch->id
+            )->get(
+                'phone_number',
+                'No Phone Number Available'
+            );
+        return response([
+            'branch_id' => $pharmacyBranch->id,
+            'name' => $name,
+            'state' => $pharmacyBranch->address ? $this->fullAddress($pharmacyBranch->address) : '',
+            'phone' => $this->phoneNumsCutter($phone),
+            "email" => $pharmacyBranch ? $pharmacyBranch->email : '',
+            "website" => $pharmacyBranch ?  $pharmacyBranch->website : '',
+            "lat" => $pharmacyBranch->address ? $pharmacyBranch->address->latitude : '',
+            "long" => $pharmacyBranch->address ? $pharmacyBranch->address->longitude : '',
+            "delivery" => $this->deliveryStatus($pharmacyBranch->support_delivery),
+            "payment_details"=> [
+                "MBOKAccountNo"=> $pharmacyBranch->bankAccount->account_no,
+                "MBOKAccountOwner"=> $pharmacyBranch->bankAccount->account_owner_name,
+                "MBOKBranchBank"=> $pharmacyBranch->bankAccount->bank_branch_name,
+                "ATMCardNo"=> $pharmacyBranch->atmCard->card_no,
+                "ATMBankName"=> $pharmacyBranch->atmCard->bank_name
+                ]
+        ],
+        200,
+        [
+            'content-type' => 'application/json'
+            ]
+    );
     }
-    /** Format the phone numbers
+
+    /**
+     * Format the phone numbers
      *
-     *  @param  $phone array[] of phone numbers
-     *  @return string phone numbers "+249##########    -   +249##########  -....."
+     * @param $phone array[] of phone numbers
+     *
+     * @return string phone numbers "+249##########    -   +249##########  -....."
+     *
+     * @author @OxSama
      */
-    private static function phoneNumsCutter($phone)
+    private function phoneNumsCutter($phone)
     {
         $phoneNums='';
         foreach($phone as $phoneNum){

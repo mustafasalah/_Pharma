@@ -16,12 +16,12 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('fullname');
-            $table->string('username',20);
+            $table->string('username', 1000);
             $table->string('password');
-            $table->enum('role',['pharmacist','branch_manager']);
+            $table->enum('role', ['pharmacist', 'branch_manager']);
             $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('phone_number',14)->nullable();
-            $table->enum('gender',['m','f']);
+            $table->string('phone_number', 14)->nullable();
+            $table->enum('gender', ['m', 'f']);
             $table->time('work_from')->nullable();
             $table->time('work_to')->nullable();
             $table->timestamp('last_seen')->useCurrent()->useCurrentOnUpdate();
