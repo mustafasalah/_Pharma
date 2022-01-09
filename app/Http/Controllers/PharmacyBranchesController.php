@@ -46,6 +46,10 @@ class PharmacyBranchesController extends Controller
 
         foreach($pharmacyBranches as $pharmacyBranch)
         {
+<<<<<<< HEAD
+            $name = $pharmacyBranch->pharmacy->name.' - '.$pharmacyBranch->name;
+            $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
+=======
             $name = (new InventoryItemsController)->pharmacyBranchName($pharmacyBranch->pharmacy->name,$pharmacyBranch->name);
             $phone = PharmaciesPhoneNumbers::where(
                 'pharmacy_branch_id',$pharmacyBranch->id
@@ -53,6 +57,7 @@ class PharmacyBranchesController extends Controller
                     'phone_number',
                     'No Phone Number Available'
                 );
+>>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
             $data=[
                 'branch_id' => $pharmacyBranch->id,
                 'name' => $name,
