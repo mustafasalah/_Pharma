@@ -8,12 +8,9 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\PharmacyBranchesController;
 use App\Http\Controllers\InventoryItemsController;
-<<<<<<< HEAD
 use App\Http\Controllers\InventoryProductController;
 use App\Http\Controllers\NotificationsController;
-=======
 use App\Http\Controllers\OrdersNotificationsController;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PharmaciesController;
 use App\Http\Controllers\PharmacyBranchInfoController;
@@ -36,12 +33,10 @@ use Illuminate\Support\Facades\Route;
 
 
 //Public route
-<<<<<<< HEAD
 Route::get('Products/search/{data}', [InventoryItemsController::class,'search']);
 Route::resource('Addresses',AddressesController::class);
 Route::resource('Products', InventoryItemsController::class);
 Route::resource('PharmaciesBranches', PharmacyBranchesController::class);//modified from */Pharmacies*
-=======
 //inventory items table routes
 //Search for an inventory item
 Route::get('inventoryItems/search/{data}', [InventoryItemsController::class, 'search'])->name('search by name, company and cat - BOTH');
@@ -67,7 +62,6 @@ Route::get('orders/{id}', [OrdersController::class, 'show'])->name('order detail
 //pharmacy Branches table controller
 Route::get('pharmaciesBranches', [PharmacyBranchesController::class, 'index'])->name('Pharmacies - Flutter'); //modified from */Pharmacies*
 Route::get('pharmaciesBranches/{id}', [PharmacyBranchesController::class, 'show'])->name('One Pharmacy - Flutter');
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
 /** Register and login routes */
 Route::post('/register', [AuthController::class, 'register'])->name('Register - BOTH');
@@ -106,20 +100,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 //Public route *2*......
-<<<<<<< HEAD
-Route::resource('users', UsersController::class);
-Route::resource('categories', CategoriesController::class);
-Route::resource('companies', CompanyController::class);
-Route::resource('employees', EmployeesController::class);
-Route::resource('inventory', InventoryProductController::class);
-Route::resource('notifications', NotificationsController::class);
-Route::resource('suppliers', SuppliersController::class);
-Route::resource('orders', OrdersController::class);
-Route::resource('drugs', ProductsController::class);
-Route::get("pharmacies/{type}/{id}", [PharmacyBranchesController::class, "show"]);
-Route::resource('pharmacies', PharmaciesController::class);
-Route::resource('pharmacyBranchInfo', PharmacyBranchInfoController::class);
-=======
 //users table controller route
 Route::post('users', [UsersController::class, 'store']);
 Route::put('users/{user}', [UsersController::class, 'edit'])->name('Edit User');
@@ -158,4 +138,3 @@ Route::put('pharmacyBranchInfo/{type}/{id}', [PharmacyBranchInfoController::clas
 Route::put('pharmacyBranchInfo/{id}/updateDelivery', [PharmacyBranchInfoController::class, 'updateDeliveryOption'])->name('Pharmacy Branches Info - updateDeliveryOption');
 Route::put('pharmacyBranchInfo/{id}/updateVat', [PharmacyBranchInfoController::class, 'updateVat'])->name('Pharmacy Branches Info - updateVat');
 Route::put('pharmacyBranchInfo/{id}', [PharmacyBranchInfoController::class, 'updatePharmacyBranchInfo'])->name('Pharmacy Branches Info - updatePharmacyBranchInfo');
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355

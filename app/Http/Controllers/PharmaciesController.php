@@ -8,10 +8,6 @@ use Illuminate\Http\Request;
 use App\Models\PharmaciesPhoneNumbers;
 use App\Models\PharmacyBranches;
 use App\Models\User;
-<<<<<<< HEAD
-use Illuminate\Support\Facades\DB;
-=======
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
 class PharmaciesController extends Controller
 {
@@ -27,21 +23,13 @@ class PharmaciesController extends Controller
 
         $response=collect();
         foreach($pharmacyBranches as $pharmacyBranch)
-<<<<<<< HEAD
-        {   
-=======
         {
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
             $data=[
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
-<<<<<<< HEAD
-                'branch' => $pharmacyBranch->name,               
-=======
                 'branch' => $pharmacyBranch->name,
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                 'phone_numbers' => $phone,
                 "email" => $pharmacyBranch->email,
                 "website" => $pharmacyBranch->website,
@@ -76,11 +64,7 @@ class PharmaciesController extends Controller
         owned_by: {
             id: 1,
             name: "Mustafa Salah",
-<<<<<<< HEAD
-        }   
-=======
         }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     */
     /**
      * Show the form for creating a new resource.
@@ -108,11 +92,7 @@ class PharmaciesController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-<<<<<<< HEAD
-     * 
-=======
      *
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
      *  api/pharmacies/onwer/:id
      *  api/pharmacies/employee/:id
      */

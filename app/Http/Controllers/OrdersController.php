@@ -4,21 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use App\Models\OrdersProducts;
-<<<<<<< HEAD
-use Illuminate\Http\Request;
-=======
 use App\Models\Pharmacies;
 use App\Models\PharmacyBranches;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
 class OrdersController extends Controller
 {
     /**
-<<<<<<< HEAD
-=======
      * Display a listing of all orders except rejected.
      * @author @OxSama
      * @return \Illuminate\Http\Response
@@ -172,7 +166,6 @@ class OrdersController extends Controller
 
 
     /**
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -200,30 +193,18 @@ class OrdersController extends Controller
                 "type" => $order->type,
                 "price" => $products,
                 "status" => $order->status,
-<<<<<<< HEAD
-                "handled_by" => 
-=======
                 "handled_by" =>
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                      [
                         "id" => $order->employee->id,
                         "name" => $order->employee->fullname
                      ],
                 "date" =>  $order->created_at,
-<<<<<<< HEAD
-                "payment" => 
-=======
                 "payment" =>
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                      [
                          "method" => $order->payment_method ,
                          "proof" => $order->payment_proof_screenshot
                      ],
-<<<<<<< HEAD
-                "products" => 
-=======
                 "products" =>
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                 $order->products->map(function($product) {
                     return [
                         "name" => $product->name,
@@ -292,19 +273,6 @@ class OrdersController extends Controller
         //
     }
 
-<<<<<<< HEAD
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-=======
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
     /**
      * Show the form for editing the specified resource.

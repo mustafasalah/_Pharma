@@ -20,12 +20,6 @@ class PharmaciesPhoneNumbers extends Model
         return $this->belongsTo(PharmacyBranches::class, 'pharmacy_branch_id');
     }
 
-    public static function getPhoneNumbers($id)
-    {
-        $phone = DB::table("pharmacies_phone_numbers")->where("pharmacy_branch_id", $id)->pluck("phone_number");
-        return array_pad($phone->toArray(), 2, "");
-    }
-
     public static function setPharmacyPhoneNumbers($id, $phone_numbers)
     {
         $exist_phone_numbers = static::where("pharmacy_branch_id", $id)->get();

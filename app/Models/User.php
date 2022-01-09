@@ -51,11 +51,7 @@ class User extends Authenticatable
     /** Relations */
     public function address()
     {
-<<<<<<< HEAD
-        return $this->hasOne(Addresses::class,'id'); //modified address_id to id
-=======
         return $this->belongsTo(Addresses::class, 'address_id'); //modified address_id to id
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
     public function orders()
     {
@@ -66,15 +62,8 @@ class User extends Authenticatable
         return $this->hasOne(Pharmacies::class, 'address_id');
     }
 
-<<<<<<< HEAD
-    public function fullName() {
-        return $this->first_name . " " . $this->last_name;
-    }
-
-=======
     public function fullName()
     {
         return $this->first_name . " " . $this->last_name;
     }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 }

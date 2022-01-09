@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
-<<<<<<< HEAD
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-=======
 use App\Models\Company;
-use App\Models\Products;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Storage;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
 class ProductsController extends Controller
 {
@@ -26,14 +20,6 @@ class ProductsController extends Controller
     public function index()
     {
         //
-<<<<<<< HEAD
-        $Drugs=Products::all();
-
-        $response=collect();
-        foreach($Drugs as $drug){
-
-            $data=[
-=======
 
         $Drugs = Products::all();
 
@@ -43,18 +29,13 @@ class ProductsController extends Controller
         foreach ($Drugs as $drug) {
 
             $data = [
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                 "id" => $drug->id,
                 "name" => $drug->name,
                 'barcode' => $drug->barcode,
                 "unit" => $drug->unit,
                 "category" => $drug->categories->name,
                 "company" =>  $drug->companies->name,
-<<<<<<< HEAD
-                "photo" => $drug->photo,
-=======
                 "photo" => ["url" => $drug->photo, "size" => 22222],
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
                 "ingredient" => $drug->ingredient,
                 "need_perspection" => $drug->need_perspection,
                 "description" => $drug->description,
@@ -83,18 +64,6 @@ class ProductsController extends Controller
     }
      */
 
-<<<<<<< HEAD
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-=======
     public function uploadPhoto(Request $request)
     {
 
@@ -124,7 +93,6 @@ class ProductsController extends Controller
     }
 
 
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     /**
      * Store a newly created resource in storage.
      *
@@ -134,8 +102,6 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         //
-<<<<<<< HEAD
-=======
         $category = Categories::firstOrCreate(["name" => $request->input("category")]);
         $company = Company::firstOrCreate(["name" => $request->input("company")]);
 
@@ -174,7 +140,6 @@ class ProductsController extends Controller
         } else {
             abort(500, "Database Error.");
         }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 
     /**
@@ -188,19 +153,6 @@ class ProductsController extends Controller
         //
     }
 
-<<<<<<< HEAD
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-=======
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 
     /**
      * Update the specified resource in storage.
@@ -212,8 +164,6 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         //
-<<<<<<< HEAD
-=======
         $category = Categories::firstOrCreate(["name" => $request->input("category")]);
         $company = Company::firstOrCreate(["name" => $request->input("company")]);
 
@@ -251,7 +201,6 @@ class ProductsController extends Controller
         } else {
             abort(500, "Database Error.");
         }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 
     /**
@@ -263,13 +212,10 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         //
-<<<<<<< HEAD
-=======
         if ($response = Products::destroy($id))
             return response(['id' => $id, 200]);
 
         else
             return response(['id' => $id, 400]);
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 }

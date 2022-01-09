@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employees;
-<<<<<<< HEAD
-=======
 use App\Models\PharmacyBranches;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
 use Illuminate\Http\Request;
 use SebastianBergmann\Diff\Diff;
 
@@ -21,28 +18,6 @@ class EmployeesController extends Controller
     {
         //
         $Employees = Employees::all();
-<<<<<<< HEAD
-       
-        $response = collect();
-       
-         foreach($Employees as $Employee){
- 
-             $data=[
-                 "id" => $Employee->id,
-                 'fullname' => $Employee->fullname,
-                 "username" => $Employee->username,
-                 "phone_number" => $Employee->phone_number,
-                 "gender" => $Employee->gender,
-                 "role" => $Employee->role,
-                 "work_from" => $Employee->work_from,
-                 "work_to" => $Employee->work_to,
-                 "last_seen" => $Employee->last_seen,
-                 "joining_date" => $Employee->created_at
-             ];
-             $response->push($data);
-         }
-         return $response;
-=======
 
         $response = collect();
 
@@ -63,7 +38,6 @@ class EmployeesController extends Controller
             $response->push($data);
         }
         return $response;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
     /*{
         id: 1,
@@ -94,11 +68,6 @@ class EmployeesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-<<<<<<< HEAD
-    public function store(Request $request)
-    {
-        //
-=======
     public function store(Request $request, $userid, $branchid)
     {
         //
@@ -129,7 +98,6 @@ class EmployeesController extends Controller
         } else {
             abort(500, "Database Error.");
         }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 
     /**
@@ -143,20 +111,7 @@ class EmployeesController extends Controller
         //
     }
 
-<<<<<<< HEAD
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-=======
-   
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
+
 
     /**
      * Update the specified resource in storage.
@@ -168,8 +123,6 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         //
-<<<<<<< HEAD
-=======
         $data = [
             "id" => $id,
             "fullname" => $request->input("full_name"),
@@ -196,7 +149,6 @@ class EmployeesController extends Controller
         } else {
             abort(500, "Database Error.");
         }
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 
     /**
@@ -210,10 +162,6 @@ class EmployeesController extends Controller
         //
         $response = Employees::destroy($id);
 
-<<<<<<< HEAD
-         return $response;
-=======
         return $response;
->>>>>>> 26f4334637e0d1d2fa2ca67ce1c85cf1c82d1355
     }
 }
