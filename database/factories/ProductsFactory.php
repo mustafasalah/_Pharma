@@ -24,18 +24,22 @@ class ProductsFactory extends Factory
     public function definition()
     {
         return [
+
+            'category_id'=>Categories::factory()->create(),
+            'company_id'=>Company::factory()->create(),
+
+
             'name'=>$this->faker->name(),
             'barcode'=>$this->faker->ean13(),
             'unit'=>$this->faker->name(),
-            'category'=>Categories::factory()->create(),
-            'company'=>Company::factory()->create(),
             'ingredient'=>$this->faker->text(),
-            'need_prescreption'=>$this->faker->boolean(20),
             'description'=>$this->faker->paragraph(),
             'usage_instructions'=>$this->faker->paragraph(2),
             'warnings'=>$this->faker->paragraph(),
             'side_effects'=>$this->faker->paragraph(),
-            'photo'=>$this->faker->sentence()
+            // 'photo'=>$this->faker->sentence(),
+
+            'need_prescription'=>$this->faker->boolean(90)
         ];
     }
 }
