@@ -19,8 +19,7 @@ class Products extends Model
     {
         return $this->belongsToMany(Orders::class,'orders_products')->withPivot("quantity", "price", "cost");
     }
-
-    // Product belongs to one category
+//modified by saeed
     public function categories()
     {
         return $this->belongsTo(Categories::class,'id');

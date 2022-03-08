@@ -15,18 +15,26 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname');
-            $table->string('username', 1000);
-            $table->string('password');
-            $table->enum('role', ['pharmacist', 'branch_manager']);
-            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('phone_number', 14)->nullable();
-            $table->enum('gender', ['m', 'f']);
+
+            // $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('pharmacy_branch_id');
+
             $table->time('work_from')->nullable();
             $table->time('work_to')->nullable();
-            $table->timestamp('last_seen')->useCurrent()->useCurrentOnUpdate();
+
             $table->timestamp('created_at')->useCurrent();
             // $table->timestamps();
+        });
+        /** Foreign Keys Constraints */
+        Schema::table('employees', function(Blueprint $table){
+
+            $table->foreign('user_id')->references('id')->on('users')
+            ->onDelete('cascade')->onUpdate('cascade');
+
+            $table->foreign('pharmacy_branch_id')->references('id')->on('pharmacy_branches')
+            ->onDelete('cascade')->onUpdate('cascade');
+
         });
     }
 

@@ -12,10 +12,9 @@
  */
 namespace Database\Factories;
 
+use App\Models\Addresses;
 use App\Models\Orders;
-use App\Models\OrdersNotifications;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 /**
  *  Class Doc Comment
  *
@@ -30,15 +29,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  *
  * @since 0.1
  */
-class OrdersNotificationsFactory extends Factory
+class GuestFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = OrdersNotifications::class;
-
     /**
      * Define the model's default state.
      *
@@ -47,8 +39,14 @@ class OrdersNotificationsFactory extends Factory
     public function definition()
     {
         return [
-            'type'=>'order',
-            'order_id'=>Orders::factory()->create()
+            'address_id' => Addresses::factory()->create(),
+            'order_id' => Orders::factory()->create(),
+
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'email' => $this->faker->email(),
+            'phone_number' => $this->faker->numerify('+249##########'),
+
         ];
     }
 }

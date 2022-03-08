@@ -338,7 +338,7 @@ class AdminStatisticsController extends Controller
 
             $confirmedOrders = Orders::where([
                 ['type' , '=' , 'online'],
-                ['status' , '=' , 'payment_confrimed']
+                ['status' , '=' , 'payment_confirmed']
             ])->whereBetween(
                 'created_at',
                 $this->getTimestamps($time)

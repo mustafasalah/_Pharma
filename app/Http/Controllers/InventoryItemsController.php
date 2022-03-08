@@ -137,11 +137,10 @@ class InventoryItemsController extends Controller
                 return $product->product;
             }
         );
-        $response = collect();
-        foreach ($Products as $product) {
-            $category = Categories::where(
-                'id',
-                $product->product->category
+        $response=collect();
+        foreach($Products as $product){
+            $category=Categories::where(
+                'id',$product->product->category_id
             )->get(
                 'name'
             )->first();
@@ -326,14 +325,12 @@ class InventoryItemsController extends Controller
                 return $product->product;
             });
             // return $product;
-            $category = Categories::where(
-                'id',
-                $product->first()->product->category
-            )->get(
-                'name'
-            )->first();
-            $category = $category->name;
-
+            $category=Categories::where(
+                    'id' , $product->first()->product->category_id
+                    )->get(
+                        'name'
+                    )->first();
+            $category=$category->name;
             $pharmacyBranchesIds = collect();
             $pharmacyBranchesNames = collect();
             $ids = collect();
@@ -357,7 +354,7 @@ class InventoryItemsController extends Controller
                 "prices" => $prices, //the price should change
                 "image" => $product->first()->product->photo,
                 "des" => $product->first()->product->unit,
-                "prescription" => $this->prescription($product->first()->product->need_prescreption),
+                "prescription" => $this->prescription($product->first()->product->need_prescription),
                 "ingredient" => $product->first()->product->ingredient,
                 "description" => $product->first()->product->description,
                 "usage_instructions" => $product->first()->product->usage_instructions,
@@ -397,42 +394,41 @@ class InventoryItemsController extends Controller
 
     public function all()
     {
-        //
-        $Products = InventoryItems::all();
+         //
+         $Products=InventoryItems::all();
 
-        $response = collect();
-        foreach ($Products as $product) {
-            $category = Categories::where(
-                'id',
-                $product->product->category
-            )->get(
-                'name'
-            )->first();
-            $category = $category->name;
+         $response=collect();
+         foreach($Products as $product){
+             $category=Categories::where(
+                 'id',$product->product->category_id
+             )->get(
+                 'name'
+             )->first();
+             $category=$category->name;
 
-            $company = Company::where('id', $product->product->company)->get('name')->first();
-            $company = $company->name;
+             $company=Company::where('id', $product->product->company_id)->get('name')->first();
+             $company=$company->name;
 
-            $data = [
-                "id" => $product->id,
-                "name" => $product->product->name,
-                'barcode' => $product->product->barcode,
-                "unit" => $product->product->unit,
-                "category" => $category,
-                "company" =>  $company,
-                "photo" => $product->product->photo,
-                "cost" => $product->cost,
-                "price" => $product->price,
-                "supplier" => $product->supplier->name,
-                "stock" => $product->stock,
-                "reserved" => $product->reserved,
-                "arrival_date" => $product->arrival_date,
-                "expire_date" => $product->expire_date,
-                "online_order" => true // $product->online_order
-            ];
-            $response->push($data);
-        }
-        return $response;
+             $data=[
+                 "id" => $product->id,
+                 "name" => $product->product->name,
+                 'barcode' => $product->product->barcode,
+                 "unit" => $product->product->unit,
+                 "category" => $category,
+                 "company" =>  $company,
+                 "photo" => $product->product->photo,
+                 "cost" => $product->cost,
+                 "price" => $product->price,
+                 "supplier" => $product->supplier->name,
+                 "stock" => $product->stock,
+                 "reserved" => $product->reserved,
+                 "arrival_date" => $product->arrival_date,
+                 "expire_date" => $product->expire_date,
+                 "online_order" => true // $product->online_order
+             ];
+             $response->push($data);
+         }
+         return $response;
     }
 
     public function namesList()

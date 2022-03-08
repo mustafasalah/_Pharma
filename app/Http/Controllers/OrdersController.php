@@ -22,10 +22,17 @@ class OrdersController extends Controller
     public function allOrdersExceptRejected()
     {
         $orders = Orders::where(
-            'status',
-            '!=',
-            'rejected'
-        )->get();
+            [
+            ['status',
+            '=',
+            'payment_confirmed'],
+            ]
+            )->orWhere([
+            ['status',
+            '=',
+            'waiting']
+            ]
+            )->get();
         return response(
             $this->buildResponse($orders),
             200,
@@ -72,6 +79,9 @@ class OrdersController extends Controller
                 'orderId' => $order->id,
                 'Date' => $this->formatDate($order->created_at),
                 'status' => $order->status,
+                'delivery' => $order->delivery,
+                'vat' => $order->vat,
+                'discount' => $order->discount,
                 'total' => $this->calculateTotal($order->id)
             ]);
         }

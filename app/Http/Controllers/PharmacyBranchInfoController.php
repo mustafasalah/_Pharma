@@ -66,7 +66,7 @@ class PharmacyBranchInfoController extends Controller
         }
         return $response;
     }
-    /*
+/*
         data: {
             id: 1,
             name: "CVS Pharmacy",
@@ -165,27 +165,17 @@ class PharmacyBranchInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($type, $id)
     {
-        # code...
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function moreInfo($type, $id)
-    {
-        if ($type === "owner") {
+        //
+        if ($type === "onwer") {
             return $this->getOwnerPharmacies($id);
         } else {
             return $this->getEmployeePharmacy($id);
         }
     }
 
-    private function getEmployeePharmacy($id)
-    {
+    private function getEmployeePharmacy($id) {
         // employee implemention...
         $pharmacy_branch_id = DB::table('Employees')->where("user_id", $id)->value("pharmacy_branch_id");
         $pharmacyBranch = PharmacyBranches::findOrFail($pharmacy_branch_id);
@@ -222,9 +212,11 @@ class PharmacyBranchInfoController extends Controller
 
         $pharmacy_id = DB::table('pharmacies')->where("owner", $id)->value("id");
 
-        $pharmacyBranch = PharmacyBranches::where("pharmacy_id", $pharmacy_id)->first();
+        $pharmacy_id = DB::table('pharmacies')->where("owner", $id)->value("id");   
+        
+        $pharmacyBranch= PharmacyBranches::where("pharmacy_id", $pharmacy_id)->first();
 
-        $response = collect();
+        $response=collect();
 
         $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
@@ -249,6 +241,16 @@ class PharmacyBranchInfoController extends Controller
         return $response;
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.

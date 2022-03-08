@@ -18,7 +18,7 @@ class Orders extends Model
 
     public function employee()
     {
-        return $this->belongsTo(Employees::class,'handeled_by');
+        return $this->belongsTo(Employees::class,'employee_id');
     }
 
     public function user()

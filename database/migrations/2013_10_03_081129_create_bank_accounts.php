@@ -13,14 +13,14 @@ class CreateBankAccounts extends Migration
      */
     public function up()
     {
-        Schema::create('bank_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('account_no');
-            $table->string('account_owner_name');
-            $table->string('bank_branch_name');
-            // $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches');
-//            $table->timestamps();
-        });
+        Schema::create(
+            'bank_accounts', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('account_no');
+                $table->string('account_owner_name');
+                $table->string('bank_branch_name');
+            }
+        );
     }
 
     /**

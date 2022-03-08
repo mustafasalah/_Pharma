@@ -153,7 +153,6 @@ class UsersController extends Controller
                 "last_seen" => $user->last_seen,
                 "joining_date" => $user->create_time
             ];
-
             $response->push($data);
         }
         return $response;
@@ -168,7 +167,7 @@ class UsersController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        // 
+        //
         if ($request->anyFilled(["state", "city", "address"])) {
             $address = Addresses::where([
                 "state" => $request->input('state'),
@@ -207,7 +206,7 @@ class UsersController extends Controller
                 "role" => $user->role,
                 "gender" => $user->gender,
                 "phone_number" => $user->phone_number,
-                "status" => $user->status, 
+                "status" => $user->status,
                 "state" => $user->address->state,
                 "city" => $user->address->city,
                 "address" => $user->address->address

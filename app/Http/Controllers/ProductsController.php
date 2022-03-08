@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
-use App\Models\Company;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Storage;
 

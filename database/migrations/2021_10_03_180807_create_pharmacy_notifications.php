@@ -15,9 +15,20 @@ class CreatePharmacyNotifications extends Migration
     {
         Schema::create('pharmacy_notifications', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['new_pharmacy','new_branch']);
-            $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreignId('pharmacy_branch_id')->constrained('pharmacy_branches')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('pharmacy_branch_id');
+            $table->enum(
+                'type',
+                ['new_pharmacy', 'new_branch']
+            );
             $table->timestamps();
+        });
+        /**Foreign Keys Constraints */
+        Schema::table('pharmacy_notifications', function (Blueprint $table){
+            $table->foreign('pharmacy_branch_id')
+            ->references('id')
+            ->on('pharmacy_branches')
+            ->onDelete('cascade');
         });
     }
 
