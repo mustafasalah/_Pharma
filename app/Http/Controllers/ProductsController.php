@@ -168,7 +168,6 @@ class ProductsController extends Controller
         $company = Company::firstOrCreate(["name" => $request->input("company")]);
 
         $data = [
-            "id" => $id,
             "name" => $request->input("name"),
             'barcode' => $request->input("barcode"),
             "unit" => $request->input('unit'),

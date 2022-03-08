@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employees;
 use App\Models\Orders;
 use App\Models\OrdersProducts;
 use App\Models\Pharmacies;
@@ -9,6 +10,7 @@ use App\Models\PharmacyBranches;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends Controller
 {
@@ -23,13 +25,14 @@ class OrdersController extends Controller
             'status',
             '!=',
             'rejected'
-            )->get();
+        )->get();
         return response(
             $this->buildResponse($orders),
             200,
             [
                 'Content-Type' => 'application/json'
-            ]);
+            ]
+        );
     }
 
     /**
@@ -45,7 +48,8 @@ class OrdersController extends Controller
             201,
             [
                 'Content-Type' => 'application/json'
-            ]);
+            ]
+        );
     }
 
     /**
@@ -59,10 +63,11 @@ class OrdersController extends Controller
      * @author @OxSama
      * @return Illuminate\Database\Eloquent\Collection
      */
-    private function buildResponse($orders){
+    private function buildResponse($orders)
+    {
 
         $response = collect();
-        foreach($orders as $key => $order){
+        foreach ($orders as $key => $order) {
             $response[$key] = collect([
                 'orderId' => $order->id,
                 'Date' => $this->formatDate($order->created_at),
@@ -71,7 +76,6 @@ class OrdersController extends Controller
             ]);
         }
         return $response;
-
     }
 
     /**
@@ -80,7 +84,8 @@ class OrdersController extends Controller
      * @param String $date
      * @return String
      */
-    private function formatDate($Date){
+    private function formatDate($Date)
+    {
         return (new Carbon($Date))->format('d F Y');
     }
     /**
@@ -89,10 +94,11 @@ class OrdersController extends Controller
      * @param int $orderId
      * @return int $total Amount
      */
-    private function calculateTotal($orderId){
-        $ordersProductsTable = OrdersProducts::where('order_id','=',$orderId)->get(['price','quantity']);
+    private function calculateTotal($orderId)
+    {
+        $ordersProductsTable = OrdersProducts::where('order_id', '=', $orderId)->get(['price', 'quantity']);
         $total = 0;
-        foreach($ordersProductsTable as $order){
+        foreach ($ordersProductsTable as $order) {
             $total += ($order->price * $order->quantity);
         }
         return $total;
@@ -120,14 +126,14 @@ class OrdersController extends Controller
         $response = collect();
         // return $this->pharmacyBranchName($order[0]->pharmacy_branch_id);
         // return $orderProducts;
-        foreach($orderProducts as $key => $orderProduct){
+        foreach ($orderProducts as $key => $orderProduct) {
             $order = Orders::where(
                 'id',
                 '=',
                 $id
             )->first();
             $response[$key] = collect([
-                "productname"=> Products::where('id','=',$orderProduct->id)->first('name')->name,
+                "productname" => Products::where('id', '=', $orderProduct->id)->first('name')->name,
                 "pharmacy" => $this->pharmacyBranchName($order->pharmacy_branch_id),
                 "QTY" => $orderProduct->quantity,
                 "Unit Price" => $orderProduct->price,
@@ -140,7 +146,7 @@ class OrdersController extends Controller
             [
                 'Content-Type' => 'application/json'
             ]
-            );
+        );
     }
     /**
      * return the whole name of the pharmacy
@@ -148,10 +154,11 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return string
      */
-    private function pharmacyBranchName($branchId){
-        $pharmacyBranch = PharmacyBranches::where('id','=',$branchId)->first(['name','pharmacy_id']);
-        $pharmacy = Pharmacies::where('id','=',$pharmacyBranch->pharmacy_id)->first('name');
-        return $pharmacy->name .' - '. $pharmacyBranch->name;
+    private function pharmacyBranchName($branchId)
+    {
+        $pharmacyBranch = PharmacyBranches::where('id', '=', $branchId)->first(['name', 'pharmacy_id']);
+        $pharmacy = Pharmacies::where('id', '=', $pharmacyBranch->pharmacy_id)->first('name');
+        return $pharmacy->name . ' - ' . $pharmacyBranch->name;
     }
 
 
@@ -163,39 +170,37 @@ class OrdersController extends Controller
     public function index()
     {
         //
-        $Orders=Orders::all();
+        $Orders = Orders::all();
 
-        $response=collect();
-        foreach($Orders as $order){
+        $response = collect();
+        foreach ($Orders as $order) {
 
-            $products=OrdersProducts::get(
-                'price'
-            )->first();
-            $products=$products->price;
+            $products = OrdersProducts::get('price')->first();
+            $products = $products->price;
 
-           /* $company=Company::where('id',$product->product->company)->get('name')->first();
+            /* $company=Company::where('id',$product->product->company)->get('name')->first();
             $company=$company->name;
 
             $order=Orders::get('type')->first();
             $order=$order->type;*/
-            $data=[
+            $data = [
                 "id" => $order->id,
                 "type" => $order->type,
                 "price" => $products,
                 "status" => $order->status,
                 "handled_by" =>
-                     [
-                        "id" => $order->employee->id,
-                        "name" => $order->employee->fullname
-                     ],
+                [
+                    "id" => isset($order->employee) ? $order->employee->id : "",
+                    "name" => isset($order->employee) ? $order->employee->fullname : ""
+                ],
                 "date" =>  $order->created_at,
                 "payment" =>
-                     [
-                         "method" => $order->payment_method ,
-                         "proof" => $order->payment_proof_screenshot
-                     ],
+                [
+                    "method" => $order->payment_method,
+                    "proof" => $order->payment_proof_screenshot
+                ],
                 "products" =>
-                $order->products->map(function($product) {
+                $order->products->map(function ($product) {
                     return [
                         "name" => $product->name,
                         "qty" => $product->pivot->quantity,
@@ -242,15 +247,6 @@ class OrdersController extends Controller
         vat: 0,
         delivery: 0,
     }*/
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -261,6 +257,76 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         //
+        // $handled_by_id = Employees::firstOrCreate([
+        //     "id" => 
+        // ]);
+
+        // $handled_by_name = Employees::firstOrCreate([
+        //     "fullname" => $request->input("name")
+        // ]);
+        //$company = Company::firstOrCreate(["name" => $request->input("company")]);    
+
+        $data = [
+            //"user_id" => $userid,
+            "type" => $request->input("type"),
+            'status' => $request->input("status"),
+            "handled_by" => $request->input("handled_by")["id"],
+            "date" => $request->input('date'),
+            "products_amount" => $request->input('products_amount'),
+            "discount" => $request->input('discount'),
+            "vat" => $request->input('vat'),
+            "payment_method" => $request->input('payment->method'),
+            "delivery" => $request->input('delivery')
+        ];
+
+        $products = OrdersProducts::get('price')->first();
+        $products = $products->price;
+
+        if ($order = Orders::create($data)) {
+
+            foreach ($request->input("products") as $product) {
+                OrdersProducts::create([
+                    "order_id" => $order->id,
+                    "product_id" => $product["id"],
+                    "quantity" => $product["qty"],
+                    "price" => $product["price"],
+                    "cost" => $product["cost"],
+                ]);
+            }
+
+            return response([
+                "id" => $order->id,
+                "type" => $order->type,
+                "status" => $order->status,
+                "handled_by" =>
+                [
+                    "id" => $order->employee->id,
+                    //"name" => $order->employee->user->fullname()
+                ],
+                "date" =>  $order->created_at,
+                "payment" =>
+                [
+                    "method" => $order->payment_method,
+                    "proof" => $order->payment_proof_screenshot
+                ],
+                "products" =>
+                $order->products->map(function ($product) {
+                    return [
+                        "qty" => $product->pivot->pro,
+                        "name" => $product->name,
+                        "qty" => $product->pivot->quantity,
+                        "price" => $product->pivot->price,
+                        "cost" => $product->pivot->costs
+                    ];
+                }),
+                "products_amount" => $order->products_amount,
+                "discount" => $order->discount,
+                "vat" => $order->vat,
+                "delivery" => $order->delivery
+            ], 200);
+        } else {
+            abort(500, "Database Error.");
+        }
     }
 
 
@@ -282,9 +348,22 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateStatus(Request $request, $id)
     {
         //
+
+        $data = [
+            "status" => $request->input("status"),
+            "handled_by" => $request->input("employee_id")
+        ];
+        $status = Orders::where('id', $id)->first();
+        if ($status->update($data)) {
+            return response([
+                "status" => $status->status
+            ], 200);
+        } else {
+            abort(500, "Database Error.");
+        }
     }
 
     /**

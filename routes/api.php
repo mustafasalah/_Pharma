@@ -39,6 +39,7 @@ Route::post('inventoryItems/{pharmacyBranch}', [InventoryItemsController::class,
 Route::put('inventoryItems/{id}', [InventoryItemsController::class, 'update'])->name('inventoryItems - update');
 //phone Api
 Route::get('inventoryItems', [InventoryItemsController::class, 'index'])->name('inventoryItems - Flutter');
+Route::get('inventoryItems/all', [InventoryItemsController::class, 'getInventoryItems'])->name('inventoryItems - getInventoryItems');
 Route::get('inventoryItems/namesList', [InventoryItemsController::class, 'namesList'])->name('UX products names - Flutter');
 //end of phone Api
 
@@ -106,12 +107,14 @@ Route::get('companies', [CompanyController::class, 'index'])->name('Companies - 
 
 //employees table controller routes
 Route::get('employees', [EmployeesController::class, 'index'])->name('Employees - React');
-Route::post('employees/{id}', [EmployeesController::class, 'store'])->name('Employees - store');
+Route::get('employees/{branchid}', [EmployeesController::class, 'show'])->name('Employees - show');
+Route::post('employees/{branchid}/store', [EmployeesController::class, 'store'])->name('Employees - store');
 Route::put('employees/{id}', [EmployeesController::class, 'update'])->name('Employees - update');
 Route::delete('employees/{employee}', [EmployeesController::class, 'destroy'])->name('Delete Employee - React');
 
-//OrdersNotifications table controller route
-Route::get('ordersNotifications', [OrdersNotificationsController::class, 'index'])->name('Orders Notifications - React');
+//ONotifications table controller route
+Route::get('notifications/{type}', [OrdersNotificationsController::class, 'getNotifications'])->name('Notifications - get');
+Route::delete('notifications/{type}/{id}', [OrdersNotificationsController::class, 'destroy'])->name('Delete Notification');
 
 //suppliers table controller route
 Route::get('suppliers', [SuppliersController::class, 'index'])->name('Suppliers - React');
@@ -124,9 +127,12 @@ Route::get('products', [ProductsController::class, 'index'])->name('Products - R
 
 //pharmacies table controller route
 Route::get('pharmacies', [PharmaciesController::class, 'index'])->name('Pharmacies - React');
+Route::delete('pharmacies/{id}', [PharmaciesController::class, 'destroy'])->name('Delete Pharmacy');
+
 
 //pharmacy branch info controller
 Route::get("pharmacyBranchInfo/{type}/{id}", [PharmacyBranchInfoController::class, 'moreInfo'])->name('(Owner/Employees)Pharmacy Branch info  - React');
+Route::post('pharmacyBranchInfo', [PharmacyBranchInfoController::class, 'store'])->name('Pharmacy Branches Info - store');
 Route::get('pharmacyBranchInfo', [PharmacyBranchInfoController::class, 'index'])->name('Pharmacy Branches Info - React');
 Route::put('pharmacyBranchInfo/{type}/{id}', [PharmacyBranchInfoController::class, 'updatePaymentOption'])->name('Pharmacy Branches Info - updatePaymentOption');
 Route::put('pharmacyBranchInfo/{id}/updateDelivery', [PharmacyBranchInfoController::class, 'updateDeliveryOption'])->name('Pharmacy Branches Info - updateDeliveryOption');

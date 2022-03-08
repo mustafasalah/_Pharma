@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Addresses;
 use App\Models\AtmCards;
 use App\Models\BankAccounts;
+use App\Models\Pharmacies;
 use Illuminate\Http\Request;
 use App\Models\PharmaciesPhoneNumbers;
 use App\Models\PharmacyBranches;
@@ -29,14 +30,7 @@ class PharmacyBranchInfoController extends Controller
 
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
-            // $phone = PharmaciesPhoneNumbers::where(
-            //     'pharmacy_branch_id',$pharmacyBranch->id
-            //     )->get(
-            //         'phone_number',
-            //         'No Phone Number Available'
-            //     );
 
-            // $phone = PharmacyBranchInfoController::phoneNumsCutter($phone);
             $data = [
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
@@ -48,22 +42,22 @@ class PharmacyBranchInfoController extends Controller
                 'city' => $pharmacyBranch->address->city,
                 'address' => $pharmacyBranch->address->address,
                 "support_delivery" => $pharmacyBranch->support_delivery,
-                "delivery_cost" => "not set",
+                "delivery_cost" => $pharmacyBranch->delivery_cost,
                 "created_at" => $pharmacyBranch->created_at,
                 "status" => $pharmacyBranch->status,
                 "payment_options" =>
                 [
                     "mbok" =>
                     [
-                        "account_no" => $pharmacyBranch->bankAccount->account_no,
-                        "account_owner_name" => $pharmacyBranch->bankAccount->account_owner_name,
-                        "bank_branch_name" => $pharmacyBranch->bankAccount->bank_branch_name
+                        "account_no" => isset($pharmacyBranch->bankAccount) ? $pharmacyBranch->bankAccount->account_no : "",
+                        "account_owner_name" => isset($pharmacyBranch->bankAccount) ? $pharmacyBranch->bankAccount->account_owner_name : "",
+                        "bank_branch_name" => isset($pharmacyBranch->bankAccount) ? $pharmacyBranch->bankAccount->bank_branch_name : ""
                     ],
                     "atm_card" =>
                     [
-                        "card_no" => $pharmacyBranch->atmCard->card_no,
-                        "card_owner_name" => "not set into atm's table",
-                        "bank_name" => $pharmacyBranch->atmCard->bank_name
+                        "card_no" => isset($pharmacyBranch->atmCard) ? $pharmacyBranch->atmCard->card_no : "",
+                        "card_owner_name" => isset($pharmacyBranch->atmCard) ? $pharmacyBranch->atmCard->card_owner_name : "",
+                        "bank_name" => isset($pharmacyBranch->atmCard) ?  $pharmacyBranch->atmCard->bank_name : ""
                     ],
 
                 ]
@@ -122,6 +116,47 @@ class PharmacyBranchInfoController extends Controller
     public function store(Request $request)
     {
         //
+        $pharmacy = PharmacyBranches::all();
+
+        $address = Addresses::firstOrCreate([
+            "state" => $request->input("state"),
+            "city" => $request->input("city"),
+            "address" => $request->input("address"),
+            "latitude" => $request->input("lat"),
+            "longitude" => $request->input("long")
+        ]);
+
+        $pharmacy_name = Pharmacies::firstOrCreate([
+            "name" => $request->input("name")
+        ]);
+
+        $data = [
+            'pharmacy_id' => $pharmacy_name->id,
+            'name' => $request->input('branch'),
+            "email" => $request->input('email'),
+            "website" => $request->input('website'),
+            "address_id" =>  $address->id
+        ];
+
+        if ($pharmacyBranch = PharmacyBranches::create($data)) {
+
+            PharmaciesPhoneNumbers::setPharmacyPhoneNumbers($pharmacyBranch->id, $request->input("phone_numbers"));
+
+            return response([
+                'name' => $pharmacyBranch->pharmacy->name,
+                'branch' => $pharmacyBranch->name,
+                'phone_numbers' => PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id),
+                "email" => $pharmacyBranch->email,
+                "website" => $pharmacyBranch->website,
+                'state' => $pharmacyBranch->address->state,
+                'city' => $pharmacyBranch->address->city,
+                'address' => $pharmacyBranch->address->address,
+                "lat" => $pharmacyBranch->address->latitude,
+                "long" => $pharmacyBranch->address->longitude
+            ], 200);
+        } else {
+            abort(500, "Database Error.");
+        }
     }
 
     /**
@@ -153,7 +188,7 @@ class PharmacyBranchInfoController extends Controller
     {
         // employee implemention...
         $pharmacy_branch_id = DB::table('Employees')->where("user_id", $id)->value("pharmacy_branch_id");
-        $pharmacyBranch = PharmacyBranches::where("pharmacy_id", $pharmacy_branch_id)->first();
+        $pharmacyBranch = PharmacyBranches::findOrFail($pharmacy_branch_id);
 
         $response = collect();
 
@@ -183,20 +218,13 @@ class PharmacyBranchInfoController extends Controller
 
     private function getOwnerPharmacies($id)
     {
-        $pharmacyBranch1 = PharmacyBranches::all();
+        $pharmacyBranch = PharmacyBranches::all();
 
         $pharmacy_id = DB::table('pharmacies')->where("owner", $id)->value("id");
 
         $pharmacyBranch = PharmacyBranches::where("pharmacy_id", $pharmacy_id)->first();
 
         $response = collect();
-
-        /*$pharm=User::where(
-                'id',$pharmacyBranch->pharmacy->owner
-            )->get(
-                'first_name'
-            )->first();
-            $pharm=$pharm->first_name;*/
 
         $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
@@ -279,7 +307,7 @@ class PharmacyBranchInfoController extends Controller
         }
     }
     //"online_order" => $request->boolean("online_order")
-    public function updateDeliveryOption($request, $id)
+    public function updateDeliveryOption(Request $request, $id)
     {
         $data = [
             "support_delivery" => $request->input("support_delivery"),
@@ -326,7 +354,6 @@ class PharmacyBranchInfoController extends Controller
         PharmaciesPhoneNumbers::setPharmacyPhoneNumbers($id, $request->input("phone_numbers"));
 
         $data = [
-            "id" => $id,
             'name' => $request->input('branch'),
             "email" => $request->input('email'),
             "website" => $request->input('website'),
@@ -346,7 +373,6 @@ class PharmacyBranchInfoController extends Controller
                 "lat" => $pharmacy->address->latitude,
                 "long" => $pharmacy->address->longitude
             ], 200);
-
         } else {
             abort(500, "Database Error.");
         }

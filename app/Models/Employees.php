@@ -23,4 +23,9 @@ class Employees extends Model
     {
         return $this->belongsTo(PharmacyBranches::class,'pharmacy_branch_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

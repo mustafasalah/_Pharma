@@ -15,6 +15,54 @@ use Illuminate\Http\Request;
 
 class InventoryItemsController extends Controller
 {
+
+    public function getInventoryItems()
+    {
+        $inventory_Products = InventoryItems::all();
+        $response = collect();
+        //$state = request('state');
+        foreach ($inventory_Products as $inventory) {
+            if ($inventory->online_order === 1) {
+                $online_order = true;
+            } else $online_order = false;
+
+            $data = [
+                "id" => $inventory->id,
+                'name' => $inventory->product->name,
+                'unit' => $inventory->product->unit,
+                'category' => $inventory->product->categories->name,
+                'company' => $inventory->product->companies->name,
+                'photo' => $inventory->product->photo,
+                "cost" => $inventory->cost,
+                "price" => $inventory->price,
+                "arrival_date" => $inventory->arrival_date,
+                "expire_date" => $inventory->expire_date,
+                "online_order" => $online_order,
+                "stock" => $inventory->stock,
+                "reserved" => $inventory->reserved,
+                "supplier" => $inventory->supplier->name
+            ];
+            $response->push($data);
+        }
+        return $response;
+    }
+    /*    {
+        id: 13,
+        name: "ORS Rehydration Salts Lemon",
+        barcode: "2783904982340234",
+        unit: "12 Tablets",
+        category: "antibiotics",
+        company: "ORS",
+        photo: "/assets/images/2.jpg",
+        cost: 300,
+        price: 450,
+        supplier: "Abo Alra",
+        stock: 34,
+        reserved: 0,
+        arrival_date: "2021-11-12",
+        expire_date: "2022-04-12",
+        online_order: true,
+    }*/
     /**
      * @author @OxSama
      * Display a listing of the resource.
@@ -51,7 +99,7 @@ class InventoryItemsController extends Controller
             "reserved" => $request->input('reserved'),
             "arrival_date" => $request->input('arrival_date'),
             "expire_date" => $request->input('expire_date'),
-            //"online_order" => $request->boolean("online_order"),
+            "online_order" => $request->boolean("online_order"),
         ];
 
         if ($inventory = InventoryItems::create($data)) {
@@ -62,7 +110,7 @@ class InventoryItemsController extends Controller
                 "price" => $inventory->price,
                 "arrival_date" => $inventory->arrival_date,
                 "expire_date" => $inventory->expire_date,
-                "online_order" => /*$inventory->online_order*/ true,
+                "online_order" => $inventory->online_order,
                 "stock" => $inventory->stock,
                 "reserved" => $inventory->reserved,
                 "supplier" => $inventory->supplier->name
@@ -133,7 +181,7 @@ class InventoryItemsController extends Controller
             "reserved" => $request->input('reserved'),
             "arrival_date" => $request->input('arrival_date'),
             "expire_date" => $request->input('expire_date'),
-            //"online_order" => $request->boolean("online_order"),
+            "online_order" => $request->boolean("online_order")
         ];
         $inventory = InventoryItems::where('id', $id)->first();
         if ($inventory->update($data)) {
@@ -142,7 +190,7 @@ class InventoryItemsController extends Controller
                 "price" => $inventory->price,
                 "arrival_date" => $inventory->arrival_date,
                 "expire_date" => $inventory->expire_date,
-                "online_order" => /*$inventory->online_order*/ true,
+                "online_order" => $inventory->online_order,
                 "stock" => $inventory->stock,
                 "reserved" => $inventory->reserved,
                 "supplier" => $inventory->supplier->name

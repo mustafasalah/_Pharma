@@ -12,6 +12,6 @@ class AtmCards extends Model
 
     public function pharmacyBranch()
     {
-        return $this->belongsTo(PharmacyBranches::class,'id','atm_card');
+        return $this->hasMany(PharmacyBranches::class,'id','atm_card');
     }
 }

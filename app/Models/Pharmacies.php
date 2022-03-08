@@ -10,6 +10,8 @@ class Pharmacies extends Model
     use HasFactory;
     public $timestamps=false;
 
+    protected $guarded = [];
+
     /**Relations */
 
     public function pharmacyBranches()

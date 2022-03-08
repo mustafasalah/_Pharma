@@ -13,6 +13,6 @@ class PharmacyNotifications extends Model
 
     public function pharmacyBranch()
     {
-        return $this->belongsTo(PharmacyBranches::class,'pharmacy_branch_id');
+        return $this->belongsTo(PharmacyBranches::class, 'pharmacy_branch_id');
     }
 }
