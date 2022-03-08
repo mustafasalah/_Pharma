@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\InventoryNotifications;
 use App\Models\OrdersNotifications;
-use Illuminate\Http\Request;
+use App\Models\PharmacyNotifications;
+use Carbon\Carbon;
 
 class OrdersNotificationsController extends Controller
 {
@@ -11,102 +14,79 @@ class OrdersNotificationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getNotifications($type)
     {
         //
-        $Orders_Notifications = OrdersNotifications::all();
-        // $Orders = Orders::all();
-        // $Pharmacy_Notifications = PharmacyNotifications::all();
-        // $Inventory_Notifications = InventoryNotifications::all();
+        if ($type === "pharmacies") {
+            $pharmacyNotifications = PharmacyNotifications::all();
+            // $Orders = Orders::all();
+            // $Pharmacy_Notifications = PharmacyNotifications::all();
+            // $Inventory_Notifications = InventoryNotifications::all();
 
-        $response = collect();
+            $response = collect();
 
 
-         /*   foreach($Pharmacy_Notifications as $pharmacy){
+            foreach ($pharmacyNotifications as $pharmacyNotification) {
 
-                $data=[
-                    "id" => $pharmacy->id,
-                    "name" => $pharmacy->type,
-                    "content" => $pharmacy->type . " Joining the pharma platform"
+                $data = [
+                    "id" => $pharmacyNotification->id,
+                    "name" => $pharmacyNotification->type,
+                    "data" => [
+                        "id" => $pharmacyNotification->pharmacyBranch->id,
+                        "name" => $pharmacyNotification->pharmacyBranch->pharmacy->name,
+                        "owner" => $pharmacyNotification->pharmacyBranch->pharmacy->ownedBy->fullname(),
+                    ]
                 ];
+
+                if ($pharmacyNotification->type === "new_branch") {
+                    $data["data"]["branch"] = $pharmacyNotification->pharmacyBranch->name;
+                }
+
                 $response->push($data);
             }
-            return $response; */
+            return $response;
+        } else if ($type === "inventory") {
+            $inventoryNotifications = InventoryNotifications::all();
+            $response = collect();
 
+            foreach ($inventoryNotifications as $inventoryNotification) {
 
+                $data = [
+                    "id" => $inventoryNotification->id,
+                    "type" => $inventoryNotification->type,
+                    "data" => [
+                        "id" => $inventoryNotification->inventoryItem->product->id,
+                        "name" => $inventoryNotification->inventoryItem->product->name
+                    ]
+                ];
 
-        $count = 1;
-            foreach($Orders_Notifications as $Order){
-                /*$orderNotif1=OrdersNotifications::where('order_id',/*$Order->orderNotification->id)->get('order_id');
-                $orderNotif2=OrdersNotifications::where('id',/*$Order->orderNotification->type)->get('type');*/
-                /*$order = $Order->order->handled_by;*/
-                $data=[
+                if ($data["type"] === "expire_soon") {
+                    $data["data"]["duration"] = Carbon::today()->diffInDays($inventoryNotification->inventoryItem->expire_date);
+                }
+
+                $response->push($data);
+            }
+            return $response;
+        } else if ($type === "orders") {
+            $Orders_Notifications = OrdersNotifications::all();
+            $response = collect();
+
+            foreach ($Orders_Notifications as $Order) {
+
+                $data = [
                     "id" => $Order->order_id,
                     "type" => $Order->type,
-                    "content" => $Order->type . " #" . $count++/*Count(array($Order->id+1))*/ . " From"
-                    /* $Orders->employee->fullname*/
-
+                    "data" => [
+                        "id" => $Order->order->id,
+                        "name" => $Order->order->user->fullname()
+                    ]
                 ];
                 $response->push($data);
             }
             return $response;
-
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -115,8 +95,30 @@ class OrdersNotificationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($type, $id)
     {
-        //
+        $notificationClass = "\\App\\Models\\";
+
+        switch ($type) {
+            case "orders":
+                $notificationClass .= "OrdersNotifications";
+                break;
+
+            case "pharmacy":
+                $notificationClass .= "PharmacyNotifications";
+                break;
+
+            case "inventory":
+                $notificationClass .= "InventoryNotifications";
+                break;
+
+            default:
+                abort(401, "Bad Request.");
+        }
+
+        if ($notificationClass::destroy($id))
+            return response(['id' => $id, 200]);
+        else
+            return response(['id' => $id, 400]);
     }
 }

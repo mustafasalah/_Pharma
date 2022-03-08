@@ -12,6 +12,6 @@ class BankAccounts extends Model
 
     public function pharmacyBranch()
     {
-        return $this->belongsTo(PharmacyBranches::class,'id','bank_account');
+        return $this->hasMany(PharmacyBranches::class,'id','bank_account');
     }
 }

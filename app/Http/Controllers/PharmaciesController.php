@@ -19,14 +19,13 @@ class PharmaciesController extends Controller
     public function index()
     {
         //
-        $pharmacyBranches=PharmacyBranches::all();
+        $pharmacyBranches = PharmacyBranches::all();
 
-        $response=collect();
-        foreach($pharmacyBranches as $pharmacyBranch)
-        {
+        $response = collect();
+        foreach ($pharmacyBranches as $pharmacyBranch) {
             $phone = PharmaciesPhoneNumbers::getPhoneNumbers($pharmacyBranch->id);
 
-            $data=[
+            $data = [
                 'id' => $pharmacyBranch->id,
                 'name' => $pharmacyBranch->pharmacy->name,
                 'branch' => $pharmacyBranch->name,
@@ -40,7 +39,7 @@ class PharmaciesController extends Controller
                 "long" => $pharmacyBranch->address->longitude,
                 "created_at" => $pharmacyBranch->created_at,
                 "status" => $pharmacyBranch->status,
-                "owned_by" => ["id" => $pharmacyBranch->pharmacy->ownedBy->id ,"name" => $pharmacyBranch->pharmacy->ownedBy->fullName()]
+                "owned_by" => ["id" => $pharmacyBranch->pharmacy->ownedBy->id, "name" => $pharmacyBranch->pharmacy->ownedBy->fullName()]
             ];
             $response->push($data);
         }
@@ -98,7 +97,6 @@ class PharmaciesController extends Controller
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -125,12 +123,12 @@ class PharmaciesController extends Controller
     }
     private static function phoneNumsCutter($phone)
     {
-        $phoneNums='';
-        foreach($phone as $phoneNum){
-            if(!$phoneNums==''){
-                $phoneNums.='   -   ';
+        $phoneNums = '';
+        foreach ($phone as $phoneNum) {
+            if (!$phoneNums == '') {
+                $phoneNums .= '   -   ';
             }
-            $phoneNums.=$phoneNum->phone_number;
+            $phoneNums .= $phoneNum->phone_number;
         }
         return $phoneNums;
     }
@@ -143,5 +141,13 @@ class PharmaciesController extends Controller
     public function destroy($id)
     {
         //
+        $pharmacyBranch = PharmacyBranches::findOrFail($id);
+        if ($pharmacyBranch->delete()) {
+            if (Pharmacies::findOrFail($pharmacyBranch->pharmacy_id)->pharmacyBranches()->count() === 0) {
+                Pharmacies::destroy($pharmacyBranch->pharmacy_id);
+            }
+            return response(['id' => $id, 200]);
+        } else
+            return response(['id' => $id, 400]);
     }
 }

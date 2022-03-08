@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employees;
 use App\Models\PharmacyBranches;
+use App\Models\User;
 use Illuminate\Http\Request;
 use SebastianBergmann\Diff\Diff;
 
@@ -21,19 +22,20 @@ class EmployeesController extends Controller
 
         $response = collect();
 
-        foreach ($Employees as $Employee) {
+        foreach ($Employees as $employee) {
 
             $data = [
-                "id" => $Employee->id,
-                'fullname' => $Employee->fullname,
-                "username" => $Employee->username,
-                "phone_number" => $Employee->phone_number,
-                "gender" => $Employee->gender,
-                "role" => $Employee->role,
-                "work_from" => $Employee->work_from,
-                "work_to" => $Employee->work_to,
-                "last_seen" => $Employee->last_seen,
-                "joining_date" => $Employee->created_at
+                "id" => $employee->id,
+                'full_name' => $employee->user->fullname(),
+                "username" => $employee->user->username,
+                "phone_number" => $employee->user->phone_number,
+                "gender" => $employee->user->gender,
+                "role" => $employee->user->role,
+                "work_from" => $employee->work_from,
+                "work_to" => $employee->work_to,
+                "joining_date" => $employee->created_at,
+                "last_seen" => $employee->user->last_seen,
+                "status" => $employee->pharmacyBranch->status
             ];
             $response->push($data);
         }
@@ -68,31 +70,36 @@ class EmployeesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $userid, $branchid)
+    public function store(Request $request, $branchid)
     {
         //
-         //$status = PharmacyBranches::firstOrCreate(["status" => $request->input("status")]);
+        //$status = PharmacyBranches::firstOrCreate(["status" => $request->input("status")]);
 
         $data = [
-            //"user_id" => $userid,
-            "role" => $request->input("role"),
+            "user_id" => $request->input("user_id"),
+            "pharmacy_branch_id" => $branchid,
             'work_from' => $request->input("work_from"),
             "work_to" => $request->input('work_to')
         ];
 
         if ($employee = Employees::create($data)) {
+
+            $employee->user->role = $request->input("role");
+            $employee->user->save();
+            $employee->refresh();
+
             return response([
                 "id" => $employee->id,
                 "pharmacyBranchId" => $branchid,
-                'full_name' => $employee->fullname,
-                "username" => $employee->username,
-                "phone_number" => $employee->phone_number,
-                "gender" => $employee->gender,
-                "role" => $employee->role,
+                'full_name' => $employee->user->fullname(),
+                "username" => $employee->user->username,
+                "phone_number" => $employee->user->phone_number,
+                "gender" => $employee->user->gender,
+                "role" => $employee->user->role,
                 "work_from" => $employee->work_from,
                 "work_to" => $employee->work_to,
-                "joining_date" => $employee->joining_date,
-                "last_seen" => $employee->last_seen,
+                "joining_date" => $employee->created_at,
+                "last_seen" => $employee->user->last_seen,
                 "status" => $employee->pharmacyBranch->status
             ], 200);
         } else {
@@ -106,9 +113,31 @@ class EmployeesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($branchid)
     {
         //
+        $Employees = Employees::where("pharmacy_branch_id" ,$branchid);
+
+        $response = collect();
+
+        foreach ($Employees as $employee) {
+
+            $data = [
+                "id" => $employee->id,
+                'full_name' => $employee->user->fullname(),
+                "username" => $employee->user->username,
+                "phone_number" => $employee->user->phone_number,
+                "gender" => $employee->user->gender,
+                "role" => $employee->user->role,
+                "work_from" => $employee->work_from,
+                "work_to" => $employee->work_to,
+                "joining_date" => $employee->created_at,
+                "last_seen" => $employee->user->last_seen,
+                "status" => $employee->pharmacyBranch->status
+            ];
+            $response->push($data);
+        }
+        return $response;
     }
 
 
@@ -124,26 +153,31 @@ class EmployeesController extends Controller
     {
         //
         $data = [
-            "id" => $id,
-            "fullname" => $request->input("full_name"),
-            "role" => $request->input("role"),
             'work_from' => $request->input("work_from"),
             "work_to" => $request->input('work_to')
         ];
 
-        $employee = Employees::where('id', $id)->first();
+
+
+        $employee = Employees::findOrFail($id);
+
         if ($employee->update($data)) {
+
+            $employee->user->role = $request->input("role");
+            $employee->user->save();
+            $employee->refresh();
+
             return response([
                 "id" => $employee->id,
-                'full_name' => $employee->fullname,
-                "username" => $employee->username,
-                "phone_number" => $employee->phone_number,
-                "gender" => $employee->gender,
-                "role" => $employee->role,
+                'full_name' => $employee->user->fullname(),
+                "username" => $employee->user->username,
+                "phone_number" => $employee->user->phone_number,
+                "gender" => $employee->user->gender,
+                "role" => $employee->user->role,
                 "work_from" => $employee->work_from,
                 "work_to" => $employee->work_to,
-                "joining_date" => $employee->joining_date,
-                "last_seen" => $employee->last_seen,
+                "joining_date" => $employee->created_at,
+                "last_seen" => $employee->user->last_seen,
                 "status" => $employee->pharmacyBranch->status
             ], 200);
         } else {

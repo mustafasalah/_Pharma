@@ -22,12 +22,12 @@ class PharmacyBranches extends Model
 
     public function atmCard()
     {
-        return $this->hasOne(AtmCards::class, 'id');
+        return $this->belongsTo(AtmCards::class, 'atm_card');
     }
 
     public function bankAccount()
     {
-        return $this->hasOne(BankAccounts::class, 'id');
+        return $this->belongsTo(BankAccounts::class, 'bank_account');
     }
 
     public function employees()
