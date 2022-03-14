@@ -121,45 +121,6 @@ class InventoryItemsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $Products = InventoryItems::where(
-            'id',
-            $id
-        )->get();
-        $Products->every(
-            function ($product) {
-                return $product->product;
-            }
-        );
-        $response=collect();
-        foreach($Products as $product){
-            $category=Categories::where(
-                'id',$product->product->category_id
-            )->get(
-                'name'
-            )->first();
-            $category = $category->name;
-            $data = [
-                "id" => $product->id,
-                'Pharmacy_id' => $product->pharmacy_branch_id,
-                "name" => $product->product->name,
-                "category" => $category,
-                "price" => $product->price,
-                "image" => $product->product->photo,
-                "des" => $product->product->unit
-            ];
-            $response->push($data);
-        }
-        return $response->first();
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -325,12 +286,13 @@ class InventoryItemsController extends Controller
                 return $product->product;
             });
             // return $product;
-            $category=Categories::where(
-                    'id' , $product->first()->product->category_id
-                    )->get(
-                        'name'
-                    )->first();
-            $category=$category->name;
+            $category = Categories::where(
+                'id',
+                $product->first()->product->category_id
+            )->get(
+                'name'
+            )->first();
+            $category = $category->name;
             $pharmacyBranchesIds = collect();
             $pharmacyBranchesNames = collect();
             $ids = collect();
@@ -392,43 +354,48 @@ class InventoryItemsController extends Controller
         return $prescription == 0 ? false : true;
     }
 
-    public function all()
+    public function all($pharmacy_branch_id = null)
     {
-         //
-         $Products=InventoryItems::all();
 
-         $response=collect();
-         foreach($Products as $product){
-             $category=Categories::where(
-                 'id',$product->product->category_id
-             )->get(
-                 'name'
-             )->first();
-             $category=$category->name;
+        if (isset($pharmacy_branch_id)) {
+            $Products = InventoryItems::where("pharmacy_branch_id", $pharmacy_branch_id)->get();
+        } else {
+            $Products = InventoryItems::all();
+        }
 
-             $company=Company::where('id', $product->product->company_id)->get('name')->first();
-             $company=$company->name;
+        $response = collect();
+        foreach ($Products as $product) {
+            $category = Categories::where(
+                'id',
+                $product->product->category_id
+            )->get(
+                'name'
+            )->first();
+            $category = $category->name;
 
-             $data=[
-                 "id" => $product->id,
-                 "name" => $product->product->name,
-                 'barcode' => $product->product->barcode,
-                 "unit" => $product->product->unit,
-                 "category" => $category,
-                 "company" =>  $company,
-                 "photo" => $product->product->photo,
-                 "cost" => $product->cost,
-                 "price" => $product->price,
-                 "supplier" => $product->supplier->name,
-                 "stock" => $product->stock,
-                 "reserved" => $product->reserved,
-                 "arrival_date" => $product->arrival_date,
-                 "expire_date" => $product->expire_date,
-                 "online_order" => true // $product->online_order
-             ];
-             $response->push($data);
-         }
-         return $response;
+            $company = Company::where('id', $product->product->company_id)->get('name')->first();
+            $company = $company->name;
+
+            $data = [
+                "id" => $product->id,
+                "name" => $product->product->name,
+                'barcode' => $product->product->barcode,
+                "unit" => $product->product->unit,
+                "category" => $category,
+                "company" =>  $company,
+                "photo" => $product->product->photo,
+                "cost" => $product->cost,
+                "price" => $product->price,
+                "supplier" => $product->supplier->name,
+                "stock" => $product->stock,
+                "reserved" => $product->reserved,
+                "arrival_date" => $product->arrival_date,
+                "expire_date" => $product->expire_date,
+                "online_order" => true // $product->online_order
+            ];
+            $response->push($data);
+        }
+        return $response;
     }
 
     public function namesList()

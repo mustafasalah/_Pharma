@@ -33,19 +33,21 @@ use Illuminate\Support\Facades\Route;
 
 
 //Public route
-Route::get('Products/search/{data}', [InventoryItemsController::class,'search']);
-Route::resource('Addresses',AddressesController::class);
+Route::get('Products/search/{data}', [InventoryItemsController::class, 'search']);
+Route::resource('Addresses', AddressesController::class);
 Route::resource('Products', InventoryItemsController::class);
-Route::resource('PharmaciesBranches', PharmacyBranchesController::class);//modified from */Pharmacies*
+Route::resource('PharmaciesBranches', PharmacyBranchesController::class); //modified from */Pharmacies*
 //inventory items table routes
 //Search for an inventory item
 Route::get('inventoryItems/search/{data}', [InventoryItemsController::class, 'search'])->name('search by name, company and cat - BOTH');
-Route::get('inventoryItems/all', [InventoryItemsController::class, 'all'])->name('inventoryItems - React');
+// Route::get('inventoryItems/all', [InventoryItemsController::class, 'all'])->name('inventoryItems - React');
+Route::get('inventoryItems/{pharmacyBranch}', [InventoryItemsController::class, 'all'])->name('inventoryItems - React');
 Route::post('inventoryItems/{pharmacyBranch}', [InventoryItemsController::class, 'store'])->name('inventoryItems - store');
 Route::put('inventoryItems/{id}', [InventoryItemsController::class, 'update'])->name('inventoryItems - update');
+Route::delete('inventoryItems/{id}', [InventoryItemsController::class, 'destroy'])->name('inventoryItems - delete');
 //phone Api
 Route::get('inventoryItems', [InventoryItemsController::class, 'index'])->name('inventoryItems - Flutter');
-Route::get('inventoryItems/all', [InventoryItemsController::class, 'getInventoryItems'])->name('inventoryItems - getInventoryItems');
+// Route::get('inventoryItems/all', [InventoryItemsController::class, 'getInventoryItems'])->name('inventoryItems - getInventoryItems');
 Route::get('inventoryItems/namesList', [InventoryItemsController::class, 'namesList'])->name('UX products names - Flutter');
 //end of phone Api
 
