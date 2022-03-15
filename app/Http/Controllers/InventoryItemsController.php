@@ -405,7 +405,7 @@ class InventoryItemsController extends Controller
         )->get();
         $products = $inventoryItems->pluck('product');
         return response(
-            $products->pluck('name'),
+            $products->pluck('name')->unique()->values(),
             201,
             [
                 'content-type' => 'application/json'
